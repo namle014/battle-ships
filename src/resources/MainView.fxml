@@ -4,11 +4,45 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="gridBoard" alignment="CENTER" hgap="5" vgap="5"
-          xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-          fx:controller="battleships.MainController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane prefWidth="1200" prefHeight="650"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@css/style.css"
+            fx:controller="battleships.MainController">
 
-    <Button fx:id="btnStartGame" text="Bắt đầu chơi" GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="10"
-            onAction="#handleStartGame"/>
+    <top>
+        <HBox alignment="CENTER">
+            <padding><Insets top="40" left="40" right="40"/></padding>
 
-</GridPane>
+            <!-- HBox bên trái -->
+            <HBox alignment="CENTER_LEFT">
+                <StackPane styleClass="frame" prefWidth="480" prefHeight="500"/>
+            </HBox>
+
+            <!-- Pane giúp đẩy HBox bên phải về đúng vị trí -->
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <!-- HBox bên phải -->
+            <HBox alignment="TOP_RIGHT">
+                <Button fx:id="btnSettings" styleClass="button-circle" onAction="#handleStartGame" prefWidth="100" prefHeight="100"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <GridPane fx:id="gridBoard" hgap="5" vgap="5" alignment="CENTER"/>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="45">
+            <padding><Insets bottom="40"/></padding>
+            <Button styleClass="button-primary" text="Play Single Player" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
+            <Button styleClass="button-primary" text="Play Online" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
+            <Button styleClass="button-primary" text="Play with Friends" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+
+

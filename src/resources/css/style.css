@@ -1,0 +1,46 @@
+.button-primary:hover, .button-circle:hover{
+    -fx-opacity: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.5, 0, 0);
+}
+
+.button-primary:pressed, .button-circle:pressed {
+    -fx-opacity: 0.85;
+}
+
+.root {
+    -fx-background-image: url("/images/background.png");
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.button-primary {
+    -fx-background-image: url("/images/bg-button.png");
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.button-circle {
+    -fx-background-image: url("/images/circle-bg.jpg");
+    -fx-border-radius: 50%;
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.frame {
+    -fx-background-color: white;
+    -fx-opacity: 0.65;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.5, 0, 0);
+}
