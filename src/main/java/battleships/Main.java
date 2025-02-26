@@ -10,8 +10,19 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.InputStream;
+import java.util.Stack;
 
 public class Main extends Application {
+    private static Stack<Scene> sceneHistory = new Stack<>(); // Lưu lịch sử scene
+
+    public static void pushScene(Scene scene) {
+        sceneHistory.push(scene);
+    }
+
+    public static Scene popScene() {
+        return sceneHistory.isEmpty() ? null : sceneHistory.pop();
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
@@ -24,10 +35,16 @@ public class Main extends Application {
 
         primaryStage.setTitle("Battle Ships");
 
-        // Cho phép thay đổi kích thước để không vô hiệu hóa nút Maximize
         primaryStage.setResizable(true);
 
-        // Ngăn người dùng kéo giãn cửa sổ bằng chuột
+        primaryStage.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setCursor(new ImageCursor(
+                        new Image(getClass().getResourceAsStream("/images/cursor.png"))
+                ));
+            }
+        });
+
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
             if (!primaryStage.isMaximized()) primaryStage.setWidth(1300);
         });
