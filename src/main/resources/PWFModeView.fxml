@@ -26,9 +26,26 @@
             <Button text="Back" onAction="#handleBack" prefWidth="230" prefHeight="140" fx:id="btnBack"/>
 
             <Region HBox.hgrow="ALWAYS"/>
-
-            <Button text="Next" onAction="#handleNext" prefWidth="230" prefHeight="140" fx:id="btnNext"/>
         </HBox>
     </bottom>
+
+    <StackPane fx:id="dialogContainer" visible="true" alignment="CENTER" maxWidth="Infinity" maxHeight="Infinity">
+        <!-- Background Overlay -->
+        <Pane style="-fx-background-color: rgba(0, 0, 0, 0.5);" prefWidth="1000" prefHeight="700"/>
+
+<!--        &lt;!&ndash; Dialog Box &ndash;&gt;-->
+<!--        <AnchorPane fx:id="dialogPane" prefWidth="1000" prefHeight="1000"-->
+<!--                    style="-fx-background-color: white; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 20;">-->
+<!--            <VBox alignment="CENTER" spacing="10">-->
+<!--                <Label text="Mã phòng:" style="-fx-text-fill: black; -fx-font-size: 14px;"/>-->
+<!--                <TextField fx:id="textCode" promptText="Nhập mã phòng..." />-->
+<!--                <HBox alignment="CENTER" spacing="10">-->
+<!--                    <Button fx:id="joinButton" text="Join" onAction="#onJoinClicked" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>-->
+<!--                    <Button fx:id="cancelButton" text="Cancel" onAction="#onCancelClicked" style="-fx-background-color: #d9534f; -fx-text-fill: white;"/>-->
+<!--                </HBox>-->
+<!--            </VBox>-->
+<!--        </AnchorPane>-->
+    </StackPane>
+
 </BorderPane>
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="battleships.JoinGameDialogController"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Mã phòng:" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+        <TextField fx:id="textCode" promptText="Nhập mã phòng..." />
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="joinButton" text="Join" j style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            <Button fx:id="cancelButton" text="Cancel" style="-fx-background-color: #d9534f; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

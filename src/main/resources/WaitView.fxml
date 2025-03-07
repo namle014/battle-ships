@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Insets?>
@@ -18,50 +14,139 @@
             prefHeight="400.0" prefWidth="600.0">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="45">
-            <padding><Insets left="20" /></padding>
+        <StackPane>
+            <HBox alignment="CENTER_LEFT" spacing="45">
+                <padding><Insets left="20" right="20"/></padding>
 
-            <StackPane>
-                <ImageView fitWidth="260" fitHeight="340">
+                <StackPane>
+                    <ImageView fitWidth="260" fitHeight="340">
+                        <image>
+                            <Image url="/images/card.jpg"/>
+                        </image>
+                    </ImageView>
+
+                    <StackPane styleClass="frame" prefWidth="140" prefHeight="90" maxHeight="90" maxWidth="140" alignment="BOTTOM_RIGHT" translateY="60" translateX="1"
+                    >
+                        <Pane style="-fx-background-color: white; -fx-opacity: 0.3; -fx-background-radius: 10;"/>
+                        <VBox alignment="CENTER" style="-fx-padding: 0 0 4 0">
+                            <StackPane>
+                                <ImageView fitWidth="56" fitHeight="56" fx:id="avatar1">
+                                    <image>
+                                        <Image url="/images/avatar.jpg"/>
+                                    </image>
+                                    <clip>
+                                        <Circle radius="28" centerX="28" centerY="28"/>
+                                    </clip>
+                                </ImageView>
+
+
+                                <!-- Background Image -->
+                                <ImageView fitWidth="64" fitHeight="64">
+                                    <image>
+                                        <Image url="/images/frame-avatar.jpg"/>
+                                    </image>
+                                </ImageView>
+                            </StackPane>
+
+                            <VBox alignment="CENTER">
+                                <Text style="-fx-font-weight: bold; -fx-fill: #2c77e6; -fx-font-size: 18px">
+                                    NamLee</Text>
+                                <HBox spacing="4" alignment="CENTER">
+                                    <ImageView fitWidth="20" fitHeight="25">
+                                        <image>
+                                            <Image url="/images/level.jpg"/>
+                                        </image>
+                                    </ImageView>
+                                    <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 15px">
+                                        Level </Text>
+                                    <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 15px">
+                                        3 </Text>
+                                </HBox>
+                            </VBox>
+                        </VBox >
+                    </StackPane>
+                </StackPane>
+
+                <!-- Pane giúp đẩy HBox bên phải về đúng vị trí -->
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <StackPane>
+                    <ImageView fitWidth="260" fitHeight="340">
+                        <image>
+                            <Image url="/images/card.jpg"/>
+                        </image>
+                    </ImageView>
+
+                    <StackPane styleClass="frame" prefWidth="140" prefHeight="90" maxHeight="90" maxWidth="140" alignment="BOTTOM_RIGHT" translateY="60" translateX="1"
+                    >
+                        <Pane style="-fx-background-color: white; -fx-opacity: 0.3; -fx-background-radius: 10;"/>
+                        <VBox alignment="CENTER" style="-fx-padding: 0 0 4 0" fx:id="avatarFoe">
+                            <StackPane>
+                                <ImageView fitWidth="56" fitHeight="56" fx:id="avatar2">
+                                    <image>
+                                        <Image url="/images/avatar.jpg"/>
+                                    </image>
+                                    <clip>
+                                        <Circle radius="28" centerX="28" centerY="28"/>
+                                    </clip>
+                                </ImageView>
+
+                                <!-- Background Image -->
+                                <ImageView fitWidth="64" fitHeight="64">
+                                    <image>
+                                        <Image url="/images/frame-avatar.jpg"/>
+                                    </image>
+                                </ImageView>
+                            </StackPane>
+
+                            <VBox alignment="CENTER">
+                                <Text style="-fx-font-weight: bold; -fx-fill: #2c77e6; -fx-font-size: 18px">
+                                    OneKill01</Text>
+                                <HBox spacing="4" alignment="CENTER">
+                                    <ImageView fitWidth="20" fitHeight="25">
+                                        <image>
+                                            <Image url="/images/level.jpg"/>
+                                        </image>
+                                    </ImageView>
+                                    <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 15px">
+                                        Level </Text>
+                                    <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 15px">
+                                        5 </Text>
+                                </HBox>
+                            </VBox>
+                        </VBox >
+
+                        <VBox fx:id="avatarWait" alignment="CENTER" translateY="-12" translateX="-5">
+                            <ImageView fitWidth="110" fitHeight="115">
+                                <image>
+                                    <Image url="/images/waiting.gif"/>
+                                </image>
+                            </ImageView>
+                        </VBox>
+                    </StackPane>
+                </StackPane>
+            </HBox>
+
+            <HBox alignment="CENTER">
+                <ImageView fitHeight="320" fitWidth="320" translateY="70">
                     <image>
-                        <Image url="/images/card.jpg"/>
+                        <Image url="/images/avatar-UI.jpg"/>
                     </image>
                 </ImageView>
 
-                <HBox  alignment="CENTER" style="-fx-padding: 120 0 0 0;">
-                    <StackPane>
-                        <!-- Avatar Image -->
-                        <ImageView fitWidth="46" fitHeight="46" fx:id="avatar1">
-                            <image>
-                                <Image url="/images/avatar.jpg"/>
-                            </image>
-                            <clip>
-                                <Circle radius="23" centerX="23" centerY="23"/>
-                            </clip>
-                        </ImageView>
-
-
-                        <!-- Background Image -->
-                        <ImageView fitWidth="80" fitHeight="80">
-                            <image>
-                                <Image url="/images/frame-avatar.jpg"/>
-                            </image>
-                        </ImageView>
-                    </StackPane>
-
-                    <VBox alignment="CENTER">
-                        <Text style="-fx-font-weight: bold; -fx-fill: #ffffff; -fx-font-size: 20px">
-                            NamLee</Text>
-                        <HBox spacing="12" alignment="CENTER">
-                            <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 16px">
-                                Level </Text>
-                            <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 16px">
-                                3 </Text>
-                        </HBox>
+                <StackPane styleClass="frame" prefWidth="250" maxHeight="140" maxWidth="250" alignment="BOTTOM_CENTER" translateX="-40" translateY="55">
+                    <Pane style="-fx-background-color: linear-gradient(to right, #86ebf8, #0d7efb); -fx-opacity: 1; -fx-background-radius: 15;"/>
+                    <VBox spacing="5" alignment="CENTER">
+                        <Text style="-fx-fill: #ffffff; -fx-font-size: 28px">
+                            Lobby Code
+                        </Text>
+                        <Text style="-fx-font-weight: bold; -fx-fill: #ffffff; -fx-font-size: 38px">
+                            1929
+                        </Text>
                     </VBox>
-                </HBox >
-            </StackPane>
-        </HBox>
+                </StackPane>
+            </HBox>
+        </StackPane>
     </top>
 
     <center>
@@ -82,6 +167,37 @@
                         <StackPane prefHeight="250" maxHeight="250" alignment="BOTTOM_RIGHT">
                             <Pane style="-fx-background-color: white; -fx-opacity: 0.7; -fx-border-width: 1; -fx-border-color: #cfc685"/>
 
+                            <HBox alignment="CENTER" spacing="45">
+                                <ImageView fx:id="shipTwo" fitHeight="60" fitWidth="30">
+                                    <image>
+                                        <Image url="/images/frame-ship-two.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fx:id="shipThree1" fitHeight="90" fitWidth="30">
+                                    <image>
+                                        <Image url="/images/frame-ship-three.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fx:id="shipThree2" fitHeight="90" fitWidth="30">
+                                    <image>
+                                        <Image url="/images/frame-ship-three.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fx:id="shipFour" fitHeight="120" fitWidth="30">
+                                    <image>
+                                        <Image url="/images/frame-ship-four.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fx:id="shipFive" fitHeight="150" fitWidth="30">
+                                    <image>
+                                        <Image url="/images/frame-ship-five.jpg"/>
+                                    </image>
+                                </ImageView>
+                            </HBox>
                         </StackPane>
                     </VBox>
 
@@ -89,8 +205,11 @@
                         <StackPane styleClass="frame">
                             <Pane style="-fx-background-color: white; -fx-opacity: 0.7; -fx-background-radius: 15;"/>
                             <HBox alignment="CENTER_LEFT" style="-fx-background-color: #fd7c0b; -fx-padding: 10; -fx-border-width: 1; -fx-border-color: #cfc685">
-                                <Text style="-fx-font-weight: bold; -fx-fill: #ffffff; -fx-font-size: 22px">
+                                <Text style="-fx-font-weight: bold; -fx-fill: #ffffff; -fx-font-size: 22px" fx:id="textFoe">
                                     Foe's Battleship
+                                </Text>
+                                <Text style="-fx-font-weight: bold; -fx-fill: #ffffff; -fx-font-size: 22px" fx:id="textFoeWaiting">
+                                    Waiting for opponent
                                 </Text>
                             </HBox>
                         </StackPane>
@@ -98,6 +217,37 @@
                         <StackPane prefHeight="250" maxHeight="250" alignment="BOTTOM_RIGHT">
                             <Pane style="-fx-background-color: white; -fx-opacity: 0.7; -fx-border-width: 1; -fx-border-color: #cfc685"/>
 
+                            <HBox alignment="CENTER" spacing="45">
+                                <ImageView fitHeight="60" fitWidth="30" fx:id="shipTwoFoe">
+                                    <image>
+                                        <Image url="/images/frame-ship-two-foe.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fitHeight="90" fitWidth="30" fx:id="shipThree1Foe">
+                                    <image>
+                                        <Image url="/images/frame-ship-three-foe.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fitHeight="90" fitWidth="30" fx:id="shipThree2Foe">
+                                    <image>
+                                        <Image url="/images/frame-ship-three-foe.jpg"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fitHeight="120" fitWidth="30" fx:id="shipFourFoe">
+                                    <image>
+                                        <Image url="/images/frame-ship-four-foe.png"/>
+                                    </image>
+                                </ImageView>
+
+                                <ImageView fitHeight="150" fitWidth="30" fx:id="shipFiveFoe">
+                                    <image>
+                                        <Image url="/images/frame-ship-five-foe.jpg"/>
+                                    </image>
+                                </ImageView>
+                            </HBox>
                         </StackPane>
                     </VBox>
                 </HBox>
@@ -115,14 +265,16 @@
     </center>
 
     <bottom>
-        <HBox alignment="BOTTOM_CENTER" spacing="10">
-            <padding><Insets bottom="5" left="15" right="15"/></padding>
+        <StackPane>
+            <HBox alignment="BOTTOM_CENTER" spacing="10">
+                <padding><Insets bottom="5" left="15" right="15"/></padding>
 
-            <Button text="Back" onAction="#handleBack" prefWidth="230" prefHeight="140" fx:id="btnBack"/>
+                <Button text="Back" onAction="#handleBack" prefWidth="230" prefHeight="140" fx:id="btnBack"/>
 
-            <Region HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS"/>
 
-            <Button text="Next" onAction="#handleNext" prefWidth="230" prefHeight="140" fx:id="btnNext"/>
-        </HBox>
+                <Button text="Next" onAction="#handleNext" prefWidth="230" prefHeight="140" fx:id="btnNext"/>
+            </HBox>
+        </StackPane>
     </bottom>
 </BorderPane>

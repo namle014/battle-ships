@@ -23,10 +23,13 @@ public class Main extends Application {
         return sceneHistory.isEmpty() ? null : sceneHistory.pop();
     }
 
+    private WaitViewController waitViewController; // Lưu controller để gọi hàm
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         Parent root = loader.load();
+
         Scene scene = new Scene(root, 1300, 750);
 
         scene.setCursor(new ImageCursor(
