@@ -127,7 +127,7 @@
                 </StackPane>
 
                 <HBox alignment="TOP_RIGHT">
-                    <StackPane styleClass="frame" prefWidth="350" prefHeight="200" maxHeight="200" alignment="BOTTOM_RIGHT" >
+                    <StackPane styleClass="frame" prefWidth="350" prefHeight="220" maxHeight="220" alignment="BOTTOM_RIGHT" >
                         <Pane style="-fx-background-color: white; -fx-opacity: 0.7; -fx-background-radius: 15;"/>
 
                         <VBox alignment="CENTER" spacing="5">
