@@ -15,7 +15,7 @@
 
 <?import javafx.scene.text.Font?>
 <BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml" stylesheets="@css/style.css" fx:controller="battleships.BoardViewController" prefHeight="400.0" prefWidth="600.0">
+            xmlns:fx="http://javafx.com/fxml" stylesheets="@css/styleBoard.css" fx:controller="battleships.BoardViewController" prefHeight="400.0" prefWidth="600.0">
 
     <top>
         <StackPane alignment="CENTER">
@@ -34,7 +34,7 @@
                    alignment="CENTER"/>
 
             <HBox alignment="TOP_RIGHT">
-                <Button styleClass="button-circle" onAction="#initialize" prefWidth="50" prefHeight="50">
+                <Button styleClass="button-circle"  prefWidth="50" prefHeight="50">
                     <graphic>
                         <ImageView fitWidth="30" fitHeight="30">
                             <image>

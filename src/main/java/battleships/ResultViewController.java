@@ -17,9 +17,9 @@ public class ResultViewController extends Application {
     @FXML
     private Label turnsLabel;
     @FXML
-    private TextFlow shipsDestroyedLeft, hitsLeft, missesLeft, accuracyLeft, streakLeft;
+    private TextFlow shipsDestroyedLeft, hitsLeft, missesLeft, accuracyLeft, streakLeft,scoreLeft;
     @FXML
-    private TextFlow shipsDestroyedRight, hitsRight, missesRight, accuracyRight, streakRight;
+    private TextFlow shipsDestroyedRight, hitsRight, missesRight, accuracyRight, streakRight,scoreRight;
 
 
 
@@ -34,8 +34,8 @@ public class ResultViewController extends Application {
 
         ResultViewController controller = loader.getController();
         controller.setGameResults(
-                new GameResult(4, 15, 29, 34, 4),
-                new GameResult(5, 17, 29, 36, 5),
+                new GameResult(4, 15, 29, 34, 4,121),
+                new GameResult(5, 17, 29, 36, 5,121),
                 58
         );
 
@@ -54,6 +54,7 @@ public class ResultViewController extends Application {
         updateTextFlow(missesLeft, String.valueOf(left.getMisses()));
         updateTextFlow(accuracyLeft, left.getAccuracy() + "%");
         updateTextFlow(streakLeft, String.valueOf(left.getBestStreak()));
+        updateTextFlow(scoreLeft, String.valueOf(left.getScore()));
 
 
         updateTextFlow(shipsDestroyedRight, right.getShipsDestroyed() + "/5");
@@ -61,6 +62,7 @@ public class ResultViewController extends Application {
         updateTextFlow(missesRight, String.valueOf(right.getMisses()));
         updateTextFlow(accuracyRight, right.getAccuracy() + "%");
         updateTextFlow(streakRight, String.valueOf(right.getBestStreak()));
+        updateTextFlow(scoreRight, String.valueOf(right.getScore()));
     }
 
     private void updateTextFlow(TextFlow textFlow, String newText) {

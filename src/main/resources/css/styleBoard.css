@@ -1,0 +1,116 @@
+.root {
+    -fx-background-image: url("/images/Board.jpg");
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.button-primary {
+    -fx-background-image: url("/images/bg-button.png");
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.button-primary:hover, .button-circle:hover, #btnBack:hover, #btnNext:hover{
+    -fx-opacity: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.5, 0, 0);
+}
+
+.button-primary:pressed, .button-circle:pressed, #btnBack:pressed, #btnNext:pressed {
+    -fx-opacity: 0.85;
+}
+
+#containerProgress1, #containerProgress2, #containerProgress3, #containerProgress4 {
+    -fx-background-radius: 6;
+    -fx-padding: 0 0 0 8;
+    -fx-border-color: #5c563f;
+    -fx-border-radius: 6;
+    -fx-border-width: 2;
+    -fx-background-color: #f3d570;
+}
+
+#progressBar1, #progressBar2, #progressBar3 {
+    -fx-accent: #ffdf12;
+    -fx-control-inner-background: #ba7913;
+    -fx-background-radius: 8;
+    -fx-border-width: 0; /* Đảm bảo không có viền */
+    -fx-padding: 1px; /* Thu nhỏ phần padding bên trong */
+}
+
+#containerProgress4 {
+    -fx-padding: 7;
+    -fx-pref-width: 350;
+    -fx-pref-height: 50;
+    -fx-max-height: 50;
+}
+
+#avatar {
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+}
+
+.hbox-container4 {
+    -fx-padding: -10 38 10;
+}
+
+#progressBar4 {
+    -fx-accent: #0ce4fc;
+    -fx-control-inner-background: #0a7098;
+    -fx-background-radius: 8;
+    -fx-border-width: 0; /* Đảm bảo không có viền */
+    -fx-padding: 1px; /* Thu nhỏ phần padding bên trong */
+}
+
+.medal-count {
+    -fx-text-fill: black;
+    -fx-padding: 0 3 0 22;
+}
+
+.button-circle {
+    -fx-background-image: url("/images/circle-bg.jpg");
+    -fx-border-radius: 50%;
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.frame {
+    /*-fx-background-color: white;*/
+    /*-fx-opacity: 0.65;*/
+    /*-fx-background-radius: 15;*/
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.5, 0, 0);
+}
+
+#btnBack {
+    -fx-background-image: url("/images/button-back.png");
+    -fx-background-size: 100% 100%;
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+#btnNext {
+    -fx-background-image: url("/images/button-next.png");
+    -fx-background-size: 100% 100%;
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}

@@ -7,8 +7,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="battleships.ResultViewController"
-            style="-fx-background-color: linear-gradient(to bottom, #4A90E2, #D69E67);"
-            stylesheets="@css/style.css">
+            stylesheets="@css/styleResult.css">
     <top>
 
     </top>
@@ -16,7 +15,7 @@
     <center>
         <VBox>
             <padding><Insets top="100"/></padding>
-            <HBox style="-fx-background-color: #ff5500; -fx-padding: 10px; -fx-alignment: center;">
+            <HBox style="-fx-background-color: rgba(10, 10, 10, 0.6); -fx-padding: 10px; -fx-alignment: center;">
                 <GridPane style="-fx-hgap: 50px; -fx-vgap: 10px; -fx-alignment: center;">
                     <columnConstraints>
                         <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
@@ -36,37 +35,43 @@
                 </GridPane>
             </HBox>
 
-            <HBox style="-fx-background-color: rgba(255, 85, 0, 0.5); -fx-padding: 10px; -fx-alignment: center;">
+            <HBox style="-fx-background-color: rgba(50, 50, 50, 0.6); -fx-padding: 10px; -fx-alignment: center;">
                 <GridPane style="-fx-padding: 20px; -fx-hgap: 50px; -fx-vgap: 10px; -fx-alignment: center;">
                     <!-- Tiêu đề -->
                     <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="2"
                               style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Tàu bị phá"
+                        <Text text="Ships destroyed"
                               style="-fx-font-size: 22px; -fx-font-weight: bold;
                      -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
                     <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="3"
                               style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Bắn trúng"
+                        <Text text="Hits"
                               style="-fx-font-size: 22px; -fx-font-weight: bold;
                      -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
                     <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="4"
                               style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Bắn trượt"
+                        <Text text="Misses"
                               style="-fx-font-size: 22px; -fx-font-weight: bold;
                      -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
                     <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="5"
                               style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Độ chính xác"
+                        <Text text="Accuracy"
                               style="-fx-font-size: 22px; -fx-font-weight: bold;
                      -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
                     <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="6"
                               style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Chuỗi bắn"
+                        <Text text="Best Hit streak"
                               style="-fx-font-size: 22px; -fx-font-weight: bold;
+                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                    </TextFlow>
+                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="9"
+                              style="-fx-text-alignment: center; -fx-alignment: center;">
+                        <Text text="Score"
+                              style="-fx-font-size: 30px; -fx-font-weight: bold;
                      -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
 
@@ -96,6 +101,11 @@
                         <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
                      -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
+                    <TextFlow fx:id="scoreLeft" GridPane.columnIndex="0" GridPane.rowIndex="9"
+                              style="-fx-text-alignment: center; -fx-alignment: right;">
+                        <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;
+                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                    </TextFlow>
 
                     <!-- Thống kê người chơi bên phải -->
                     <TextFlow fx:id="shipsDestroyedRight" GridPane.columnIndex="2" GridPane.rowIndex="2"
@@ -121,6 +131,11 @@
                     <TextFlow fx:id="streakRight" GridPane.columnIndex="2" GridPane.rowIndex="6"
                               style="-fx-text-alignment: center; -fx-alignment: left;">
                         <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
+                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                    </TextFlow>
+                    <TextFlow fx:id="scoreRight" GridPane.columnIndex="2" GridPane.rowIndex="9"
+                              style="-fx-text-alignment: center; -fx-alignment: left;">
+                        <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;
                      -fx-stroke: black; -fx-stroke-width: 1px;"/>
                     </TextFlow>
                 </GridPane>
