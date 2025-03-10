@@ -67,7 +67,7 @@ public class PlayGameViewController extends Application {
         FXMLLoader loader = new FXMLLoader(location);
         BorderPane root = loader.load();
         PlayGameViewController controller = loader.getController();
-        Scene scene = new Scene(root, 1300, 750);
+        Scene scene = new Scene(root, 1500, 750);
         primaryStage.setTitle("Battle Ships");
         primaryStage.setScene(scene);
 
