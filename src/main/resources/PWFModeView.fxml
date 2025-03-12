@@ -7,16 +7,60 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             stylesheets="@css/style.css"
             fx:controller="battleships.PWFModeController">
 
     <center>
-        <VBox alignment="CENTER" spacing="50" translateY="100">
-            <Button fx:id="btnCreateGame" styleClass="button-primary" text="Create Game" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
-            <Button fx:id="btnJoinGame" styleClass="button-primary" text="Join Game" onAction="#handleJoinGame" prefWidth="360" prefHeight="110"/>
-        </VBox>
+        <StackPane>
+            <VBox alignment="CENTER" spacing="50" translateY="70">
+                <Button fx:id="btnCreateGame" styleClass="button-primary" text="Create Game" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
+                <Button fx:id="btnJoinGame" styleClass="button-primary" text="Join Game" onAction="#handleJoinGame" prefWidth="360" prefHeight="110"/>
+            </VBox>
+
+            <StackPane fx:id="dialogContainer" visible="false" prefWidth="650" prefHeight="350"  maxWidth="650" maxHeight="350" translateY="70">
+                <!-- Background Overlay -->
+                <Pane style="-fx-background-color: transparent;"
+                      prefWidth="650" prefHeight="350" maxWidth="650" maxHeight="350"/>
+
+                <!-- Dialog Box -->
+                <VBox spacing="20" alignment="CENTER"
+                      style="
+                 -fx-background-image: url(/images/dialog.jpg);
+                -fx-background-size: 100% 100%;
+                -fx-background-repeat: no-repeat;
+                -fx-background-position: center;
+                 -fx-border-radius: 10px;
+                 -fx-background-radius: 10px;
+                 -fx-padding: 15px 60px 20px;
+                 -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);">
+                    <Label text="Enter Room Code"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f3f3f3;
+                                    -fx-padding: 0 0 -7 0"/>
+
+                    <Label text="Enter the game room code to connect with other players and enjoy the battle."
+                           style="-fx-font-size: 18px; -fx-text-fill: #e6e6e6;  -fx-padding: 0 0 5 0; -fx-alignment: center;
+                                    -fx-text-alignment: center; -fx-wrap-text: true"/>
+
+                    <!-- Input Field -->
+                    <TextField fx:id="textCode" promptText="Enter room code..."
+                               style="-fx-pref-width: 300px; -fx-pref-height: 45px;
+                          -fx-font-size: 22; -fx-border-radius: 8px; -fx-font-weight: bold;
+                          -fx-text-alignment: center;  -fx-alignment: center;
+                          -fx-background-radius: 8px; -fx-border-color: #ccc;"/>
+
+                    <HBox alignment="CENTER" spacing="20" style=" -fx-padding: 14 0 0 0">
+                        <Button fx:id="joinButton" text="Join room" onAction="#onJoinClicked"  prefWidth="150" prefHeight="50"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 22;
+                                        -fx-background-radius: 8; -fx-font-weight: bold"/>
+                        <Button fx:id="cancelButton" text="Cancel" onAction="#onCancelClicked" prefWidth="120" prefHeight="50"
+                                style="-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: 22;
+                                        -fx-background-radius: 8; -fx-font-weight: bold"/>
+                    </HBox>
+                </VBox>
+            </StackPane>
+        </StackPane>
     </center>
 
     <bottom>
@@ -28,24 +72,5 @@
             <Region HBox.hgrow="ALWAYS"/>
         </HBox>
     </bottom>
-
-    <StackPane fx:id="dialogContainer" visible="true" alignment="CENTER" maxWidth="Infinity" maxHeight="Infinity">
-        <!-- Background Overlay -->
-        <Pane style="-fx-background-color: rgba(0, 0, 0, 0.5);" prefWidth="1000" prefHeight="700"/>
-
-<!--        &lt;!&ndash; Dialog Box &ndash;&gt;-->
-<!--        <AnchorPane fx:id="dialogPane" prefWidth="1000" prefHeight="1000"-->
-<!--                    style="-fx-background-color: white; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 20;">-->
-<!--            <VBox alignment="CENTER" spacing="10">-->
-<!--                <Label text="Mã phòng:" style="-fx-text-fill: black; -fx-font-size: 14px;"/>-->
-<!--                <TextField fx:id="textCode" promptText="Nhập mã phòng..." />-->
-<!--                <HBox alignment="CENTER" spacing="10">-->
-<!--                    <Button fx:id="joinButton" text="Join" onAction="#onJoinClicked" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>-->
-<!--                    <Button fx:id="cancelButton" text="Cancel" onAction="#onCancelClicked" style="-fx-background-color: #d9534f; -fx-text-fill: white;"/>-->
-<!--                </HBox>-->
-<!--            </VBox>-->
-<!--        </AnchorPane>-->
-    </StackPane>
-
 </BorderPane>
 

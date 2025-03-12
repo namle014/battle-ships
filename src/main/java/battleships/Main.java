@@ -26,8 +26,10 @@ public class Main extends Application {
     private WaitViewController waitViewController; // Lưu controller để gọi hàm
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+    public void start(Stage primaryStage) throws Exception { // Kiểm tra kết nối database khi khởi động game
+        database.DatabaseHelper.testConnection();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginView.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 1300, 750);
