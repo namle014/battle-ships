@@ -51,24 +51,24 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>21.0.6</version>
+      <version>23.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>21.0.6</version>
+      <version>23.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
-      <version>21.0.6</version>
+      <version>23.0.2</version>
       <classifier>win</classifier>
     </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-media</artifactId>
-      <version>21.0.6</version> <!-- Phiên bản của bạn -->
+      <version>23.0.2</version> <!-- Phiên bản của bạn -->
     </dependency>
 
     <dependency>
