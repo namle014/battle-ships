@@ -1,5 +1,7 @@
 package battleships;
 
+import common.DailyQuestsSession;
+import common.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,8 +14,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.List;
 
 import static battleships.Main.pushScene;
 
@@ -45,6 +49,24 @@ public class MainController {
         containerProgress1.setMaxWidth(Region.USE_PREF_SIZE);
         containerProgress1.setMaxHeight(Region.USE_PREF_SIZE);
         btnSettings.setGraphic(settingsIcon); // Thêm icon vào button
+        SoundManager.playBackgroundMusic("src/main/resources/sounds/battle-ship-short.mp3");
+        updateInfoPersonal();
+        updateDailyQuests();
+    }
+
+    @FXML
+    private void handlePlaySingle() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/WaitView.fxml"));
+        Parent modeView = loader.load();
+
+        Stage stage = (Stage) btnPlaySingle.getScene().getWindow();
+
+        Scene currentScene = stage.getScene();
+        pushScene(currentScene);
+
+        stage.setScene(new Scene(modeView));
+
+        stage.show();
     }
 
     @FXML
@@ -63,13 +85,57 @@ public class MainController {
     }
 
     @FXML
-    private ProgressBar progressBar;
-    @FXML
-    private Label progressLabel;
+    private void handleSetting()  throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/SettingView.fxml"));
+        Parent modeView = loader.load();
 
-    public void updateProgress(int current, int total) {
-        double progress = (double) current / total;
-        progressBar.setProgress(progress);
-        progressLabel.setText(current + "/" + total);
+        Stage stage = (Stage) btnSettings.getScene().getWindow();
+
+        Scene currentScene = stage.getScene();
+        pushScene(currentScene);
+
+        stage.setScene(new Scene(modeView));
+
+        stage.show();
+    }
+
+    @FXML
+    private ProgressBar progressBar4, progressBar3, progressBar2, progressBar1;
+    @FXML
+    private Label progressLabel1, progressLabel2, progressLabel3, progressLabel4;
+
+    @FXML
+    private Text winsText, totalPlaysText, accuracyText, levelText;
+
+    public void updateInfoPersonal() {
+        UserSession session = UserSession.getInstance();
+        int wins = session.getTotalWins(), totalPlays = session.getTotalPlays();
+        double accuracy = session.getTotalShots() != 0 ? (double) session.getTotalHits() / session.getTotalShots() : 0;
+        String accuracyStr = String.format("%.1f", accuracy);
+        int level = session.getLevel();
+        int currentProgress = session.getCurrentProgressLevel();
+
+        progressBar4.setProgress(1.0 * currentProgress / Math.min(level * 4, 30));
+        progressLabel4.setText(String.format("%d/%d", currentProgress, Math.min(level * 4, 30)));
+        levelText.setText(Integer.toString(level));
+        winsText.setText(Integer.toString(wins));
+        totalPlaysText.setText(Integer.toString(totalPlays));
+        accuracyText.setText(accuracyStr);
+    }
+
+    public void updateDailyQuests() {
+        List<DailyQuestsSession> session = DailyQuestsSession.getDailyQuests();
+        DailyQuestsSession progress1 = session.get(0);
+        DailyQuestsSession progress2 = session.get(1);
+        DailyQuestsSession progress3 = session.get(2);
+
+        progressBar1.setProgress(1.0 * progress1.getCurrentProgress() / 3);
+        progressLabel1.setText(String.format("%d/3", progress1.getCurrentProgress()));
+
+        progressBar2.setProgress(1.0 * progress2.getCurrentProgress() / 2);
+        progressLabel2.setText(String.format("%d/2", progress2.getCurrentProgress()));
+
+        progressBar3.setProgress(1.0 * progress3.getCurrentProgress());
+        progressLabel3.setText(String.format("%d/1", progress3.getCurrentProgress()));
     }
 }

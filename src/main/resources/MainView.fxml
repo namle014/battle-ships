@@ -159,7 +159,7 @@
                                     <HBox spacing="12">
                                         <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 18px">
                                             Level </Text>
-                                        <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 18px">
+                                        <Text style="-fx-font-weight: bold; -fx-fill: #ff0e32; -fx-font-size: 18px" fx:id="levelText">
                                             3 </Text>
                                     </HBox>
                                 </VBox>
@@ -174,7 +174,7 @@
                                     </ImageView>
                                     <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px">
                                         Total number of plays:</Text>
-                                    <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px">
+                                    <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px" fx:id="totalPlaysText">
                                         35 </Text>
                                 </HBox>
 
@@ -186,8 +186,8 @@
                                             </image>
                                         </ImageView>
                                         <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px">
-                                            Win: </Text>
-                                        <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px">
+                                            Wins: </Text>
+                                        <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px" fx:id="winsText">
                                             28 </Text>
                                     </HBox>
 
@@ -199,7 +199,7 @@
                                         </ImageView>
                                         <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px">
                                             Accuracy:</Text>
-                                        <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px">
+                                        <Text style="-fx-font-weight: bold; -fx-fill: #155588; -fx-font-size: 20px" fx:id="accuracyText">
                                             70% </Text>
                                     </HBox>
                                 </HBox>
@@ -214,7 +214,7 @@
 
             <!-- HBox bên phải -->
             <HBox alignment="TOP_RIGHT">
-                <Button fx:id="btnSettings" styleClass="button-circle" onAction="#handleStartGame" prefWidth="100" prefHeight="100"/>
+                <Button fx:id="btnSettings" styleClass="button-circle" onAction="#handleSetting" prefWidth="100" prefHeight="100"/>
             </HBox>
         </StackPane>
     </top>
@@ -252,7 +252,7 @@
     <bottom>
         <HBox alignment="CENTER" spacing="45">
             <padding><Insets bottom="40"/></padding>
-            <Button fx:id="btnPlaySingle" styleClass="button-primary" text="Play Single Player" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
+            <Button fx:id="btnPlaySingle" styleClass="button-primary" text="Play Single Player" onAction="#handlePlaySingle" prefWidth="360" prefHeight="110"/>
             <Button fx:id="btnPlayOnline" styleClass="button-primary" text="Play Online" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
             <Button fx:id="btnPlayWithFriends" styleClass="button-primary" text="Play with Friends" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
         </HBox>

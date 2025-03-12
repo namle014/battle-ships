@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="battleships.SignUpController"
+            stylesheets="@css/style.css"
+            fx:id="root"
+            style="-fx-background-image: url('/images/bg-login.png');
+                   -fx-background-size: cover;
+                   -fx-background-repeat: no-repeat;
+                   -fx-background-position: center;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="25" prefHeight="600" prefWidth="940" maxWidth="940" maxHeight="600" translateY="70"
+              style="-fx-background-image: url('/images/frame-login-v1.jpg');
+                   -fx-background-size: 100% 100%;
+                   -fx-background-repeat: no-repeat;
+                   -fx-background-position: center;
+             -fx-background-radius: 20;
+             -fx-border-radius: 20;
+">
+            <TextField fx:id="username" promptText="Username" maxWidth="400"  translateY="5"
+                       style="-fx-pref-width: 400px; -fx-pref-height: 60px;
+                              -fx-font-size: 22px; -fx-border-radius: 8px; -fx-font-weight: bold;
+                              -fx-background-radius: 8px; -fx-border-color: #989797; -fx-padding: 10px;"/>
+
+            <PasswordField fx:id="password" promptText="Password"  maxWidth="400"  translateY="5"
+                           style="-fx-pref-width: 400px; -fx-pref-height: 60px;
+                                  -fx-font-size: 22px; -fx-border-radius: 8px; -fx-font-weight: bold;
+                                  -fx-background-radius: 8px; -fx-border-color: #989797; -fx-padding: 10px;"/>
+
+            <PasswordField fx:id="confirmPassword" promptText="Confirm Password"  maxWidth="400"  translateY="5"
+                           style="-fx-pref-width: 400px; -fx-pref-height: 60px;
+                                  -fx-font-size: 22px; -fx-border-radius: 8px; -fx-font-weight: bold;
+                                  -fx-background-radius: 8px; -fx-border-color: #989797; -fx-padding: 10px;"/>
+
+            <HBox alignment="BOTTOM_CENTER" spacing="30"  translateY="3">
+                <padding><Insets top="5"/></padding>
+
+                <Button text="Sign Up"
+                        styleClass="button-primary" onAction="#handleSignUp" prefWidth="210" prefHeight="70" fx:id="btnSignUp"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="BOTTOM_CENTER" spacing="10">
+            <padding><Insets bottom="5" left="15" right="15"/></padding>
+
+            <Button text="Back" onAction="#handleBack" prefWidth="230" prefHeight="140" fx:id="btnBack"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </bottom>
+</BorderPane>
