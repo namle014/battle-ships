@@ -200,6 +200,12 @@ public class BoardViewController extends Application {
 
             rectangle.setOnMouseClicked(event -> handleClick(event, ship));
             rectangle.setOnDragDetected(event -> handleDragDetected(event, ship));
+            rectangle.setOnDragDone(event -> {
+                if (!event.isDropCompleted()) {
+                    updateBoard();
+                }
+                event.consume();
+            });
         }
     }
 
