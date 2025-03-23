@@ -8,12 +8,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
@@ -159,10 +161,36 @@ public class BoardViewController extends Application {
     }
 
     private void addShipToGrid(Ship ship) {
+        Image defaultShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship.png"));
+        Image greenShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_green.png"));
+        Image redShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_red.png"));
+        Image blueShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_blue.png"));
+        Image orangeShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_orange.png"));
+
+        // Chọn ảnh phù hợp theo kích thước tàu
+        ImagePattern shipPattern;
+        switch (ship.getSize()) {
+            case 5:
+                shipPattern = new ImagePattern(greenShipImage);
+                break;
+            case 4:
+                shipPattern = new ImagePattern(redShipImage);
+                break;
+            case 3:
+                shipPattern = new ImagePattern(blueShipImage);
+                break;
+            case 2:
+                shipPattern = new ImagePattern(orangeShipImage);
+                break;
+            default:
+                shipPattern = new ImagePattern(defaultShipImage);
+        }
+
         for (int i = 0; i < ship.getSize(); i++) {
-            Rectangle rectangle = new Rectangle(45, 45, Color.BLUE);
+            Rectangle rectangle = new Rectangle(45, 45);
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(1);
+            rectangle.setFill(shipPattern);
 
             if (ship.isHorizontal()) {
                 boardGrid.add(rectangle, ship.getStartX() + i, ship.getStartY());
@@ -218,7 +246,9 @@ public class BoardViewController extends Application {
     private void handleDragOver(DragEvent event) {
         if (!event.getDragboard().hasString()) return;
         Node node = event.getPickResult().getIntersectedNode();
-        if (!(node instanceof Rectangle)) return;
+        if (!(node instanceof Rectangle)) {
+            return;
+        }
         Integer newX = GridPane.getColumnIndex(node);
         Integer newY = GridPane.getRowIndex(node);
         if (newX == null || newY == null) return;
