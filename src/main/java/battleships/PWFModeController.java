@@ -22,36 +22,45 @@ public class PWFModeController {
     @FXML
     private Button btnBack;
 
-//    @FXML
-//    private AnchorPane dialogPane;
+    @FXML
+    private Button joinButton, cancelButton;
+
+    @FXML
+    private BorderPane root;
 
     @FXML
     private Button btnCreateGame;
 
     @FXML
-    void initialize() {
+    public void initialize() {
+        textCode.textProperty().addListener((observable, oldValue, newValue) -> {
+            textCode.setText(newValue.replaceAll("[^\\d]", ""));
+        });
 
+        root.setOnMouseClicked(event -> {
+            if (!textCode.isFocused()) return; // Nếu đã mất focus rồi thì bỏ qua
+            textCode.getParent().requestFocus(); // Yêu cầu focus vào phần tử cha
+        });
     }
 
-//    @FXML
-//    private TextField textCode;
+    @FXML
+    private TextField textCode;
     @FXML
     private StackPane dialogContainer;
 
-    // Xử lý sự kiện nút Join
-//    @FXML
-//    private void onJoinClicked() {
-//        String code = textCode.getText();
-//        if (!code.isEmpty()) {
-//            System.out.println("Mã phòng nhập vào: " + code);
-//            dialogContainer.setVisible(false); // Ẩn dialog sau khi nhập mã
-//        }
-//    }
-//
-//    @FXML
-//    private void onCancelClicked() {
-//        dialogContainer.setVisible(false); // Ẩn dialog nếu nhấn Cancel
-//    }
+    @FXML
+    private void onJoinClicked() {
+        String code = textCode.getText();
+        if (!code.isEmpty()) {
+            System.out.println("Mã phòng nhập vào: " + code);
+            dialogContainer.setVisible(false); // Ẩn dialog sau khi nhập mã
+        }
+    }
+
+    @FXML
+    private void onCancelClicked() {
+        dialogContainer.setVisible(false); // Ẩn dialog nếu nhấn Cancel
+    }
 
     @FXML
     private void handleStartGame()   throws IOException {
@@ -70,6 +79,7 @@ public class PWFModeController {
 
     @FXML
     private void handleJoinGame() {
+        textCode.clear();
         dialogContainer.setVisible(true);
     }
 

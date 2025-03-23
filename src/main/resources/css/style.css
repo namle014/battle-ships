@@ -18,13 +18,22 @@
     -fx-border-width: 0;
 }
 
-.button-primary:hover, .button-circle:hover, #btnBack:hover, #btnNext:hover{
+.button-primary:hover, .button-circle:hover, #btnBack:hover, #btnNext:hover, #btnLogin:hover, #btnSignUp:hover {
     -fx-opacity: 0.95;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.5, 0, 0);
 }
 
-.button-primary:pressed, .button-circle:pressed, #btnBack:pressed, #btnNext:pressed {
+#joinButton:hover, #cancelButton:hover, #btnChangePassword:hover {
+    -fx-opacity: 0.9;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.5, 0, 0);
+}
+
+.button-primary:pressed, .button-circle:pressed, #btnBack:pressed, #btnNext:pressed, #btnLogin:pressed, #btnSignUp:pressed  {
     -fx-opacity: 0.85;
+}
+
+#joinButton:pressed, #cancelButton:pressed, #btnChangePassword:pressed {
+    -fx-opacity: 0.75;
 }
 
 #containerProgress1, #containerProgress2, #containerProgress3, #containerProgress4 {
@@ -103,6 +112,32 @@
     -fx-border-width: 0;
 }
 
+.dialog-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.dialog-button-cancel {
+    -fx-background-color: #ff0000;
+    -fx-background-radius: 50%;
+    -fx-padding: 10px;
+}
+
+.dialog-button-accept {
+    -fx-background-color: #00ff00;
+    -fx-background-radius: 50%;
+    -fx-padding: 10px;
+}
+
+.dialog-button-cancel:hover {
+    -fx-background-color: #cc0000;
+}
+
+.dialog-button-accept:hover {
+    -fx-background-color: #00cc00;
+}
+
 #btnNext {
     -fx-background-image: url("/images/button-next.png");
     -fx-background-size: 100% 100%;
@@ -114,3 +149,67 @@
     -fx-border-color: transparent;
     -fx-border-width: 0;
 }
+
+.custom-slider {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+}
+
+/* Thanh trượt chính */
+.custom-slider .track {
+    -fx-background-color: #CCCCCC; /* Màu xám mặc định */
+    -fx-background-radius: 10px;
+    -fx-pref-height: 8px;
+}
+
+/* Nút kéo */
+.custom-slider .thumb {
+    -fx-background-image: url("/images/thumb.jpg");
+    -fx-background-size: cover;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 24px;
+    -fx-pref-height: 24px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0, 0, 2);
+}
+
+/* Style mặc định */
+#txtCurrentPassword, #txtNewPassword, #txtConfirmPassword {
+    -fx-background-color: #f8f9fa;  /* Màu nền nhẹ nhàng */
+    -fx-border-color: #ced4da;      /* Viền xám nhạt */
+    -fx-border-radius: 8px;         /* Bo góc */
+    -fx-background-radius: 10px;     /* Bo góc nền */
+    -fx-padding: 8px;               /* Tạo khoảng cách trong field */
+    -fx-font-size: 16px;            /* Kích thước chữ vừa phải */
+    -fx-text-fill: #495057;         /* Màu chữ tối vừa để dễ nhìn */
+}
+
+#txtCurrentPassword:focused, #txtNewPassword:focused, #txtConfirmPassword:focused {
+    -fx-border-color: #007bff;   /* Đổi viền thành xanh dương */
+    -fx-background-color: #ffffff; /* Nền sáng hơn khi nhập */
+    -fx-effect: dropshadow(gaussian, rgba(0, 123, 255, 0.3), 8, 0.5, 0, 0); /* Hiệu ứng bóng nhẹ */
+}
+
+.custom-slider {
+    -fx-pref-width: 320px;
+}
+
+.custom-slider .track {
+    -fx-background-color: #007bff;
+    -fx-pref-height: 18px;
+}
+
+.custom-slider .thumb {
+    /*-fx-background-color: #ff5722;*/
+    -fx-pref-width: 35px;
+    -fx-pref-height: 35px;
+    -fx-background-radius: 50%;
+}
+
+#levelUpImage {
+    -fx-z-index: 100;
+}
+
+
+
+
+
