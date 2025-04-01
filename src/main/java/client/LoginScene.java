@@ -26,7 +26,7 @@ public class LoginScene {
         TextField usernameField = new TextField();
         Button loginButton = new Button("Login");
 
-        loginButton.setOnAction(e -> network.sendLogin(usernameField.getText()));
+        loginButton.setOnAction(e -> network.sendLogin(usernameField.getText(), 1));
 
         root.getChildren().addAll(label, usernameField, loginButton);
         Scene scene = new Scene(root, 300, 200);

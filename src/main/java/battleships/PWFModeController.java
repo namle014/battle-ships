@@ -1,5 +1,8 @@
 package battleships;
 
+import client.NetworkManager;
+import common.Network;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +22,9 @@ import static battleships.Main.popScene;
 import static battleships.Main.pushScene;
 
 public class PWFModeController {
+    NetworkManager network;
+    private int id;
+
     @FXML
     private Button btnBack;
 
@@ -43,17 +49,34 @@ public class PWFModeController {
         });
     }
 
+    public void setNetwork(NetworkManager network) {
+        this.network = network;
+    }
+
     @FXML
     private TextField textCode;
     @FXML
     private StackPane dialogContainer;
 
     @FXML
-    private void onJoinClicked() {
+    private void onJoinClicked() throws IOException {
         String code = textCode.getText();
         if (!code.isEmpty()) {
-            System.out.println("Mã phòng nhập vào: " + code);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/WaitView.fxml"));
+            Parent modeView = loader.load();
+            WaitViewController controller = (WaitViewController) loader.getController();
+            network.setWaitModeController(controller);
+
+            Stage stage = (Stage) btnCreateGame.getScene().getWindow();
+
+            Scene currentScene = stage.getScene();
+            pushScene(currentScene);
+
+            stage.setScene(new Scene(modeView));
+
+            stage.show();
             dialogContainer.setVisible(false); // Ẩn dialog sau khi nhập mã
+            network.joinRoom(code);
         }
     }
 
@@ -63,9 +86,14 @@ public class PWFModeController {
     }
 
     @FXML
-    private void handleStartGame()   throws IOException {
+    private void handleStartGame() throws IOException {
+        network.createRoom();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/WaitView.fxml"));
         Parent modeView = loader.load();
+        WaitViewController controller = (WaitViewController) loader.getController();
+        network.setWaitModeController(controller);
+        controller.setRoomId(network.getCurrentRoomId());
 
         Stage stage = (Stage) btnCreateGame.getScene().getWindow();
 

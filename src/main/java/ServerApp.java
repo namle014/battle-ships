@@ -73,6 +73,7 @@ public class ServerApp {
     private void handleLogin(Connection connection, LoginRequest request) {
         PlayerInfo player = new PlayerInfo();
         player.username = request.username;
+        player.level = request.level;
         players.put(connection, player);
 
         LoginResponse response = new LoginResponse();
@@ -93,20 +94,24 @@ public class ServerApp {
         response.roomId = roomId;
         connection.sendTCP(response);
 
-        updateRoom(connection, room);
+        updateRoom(connection, room, null);
         broadcastRoomList();
     }
 
     private void handleJoinRoom(Connection connection, JoinRoomRequest request) {
+        PlayerInfo opponent = new PlayerInfo();
         RoomInfo room = rooms.get(request.roomId);
+        System.out.println("Room " + room);
         if (room != null && room.players.size() < 2) {
             room.players.add(players.get(connection));
-            updateRoom(connection, room);
             for (Connection c : server.getConnections()) {
                 if (c != connection && room.players.contains(players.get(c))) {
-                    updateRoom(c, room);
+                    System.out.println("Player " + players.get(c) + players.get(connection) + " joined the room");
+                    opponent = players.get(c);
+                    updateRoom(c, room, players.get(connection));
                 }
             }
+            updateRoom(connection, room, opponent);
             broadcastRoomList();
         }
     }
@@ -136,10 +141,11 @@ public class ServerApp {
         connection.sendTCP(response);
     }
 
-    private void updateRoom(Connection connection, RoomInfo room) {
+    private void updateRoom(Connection connection, RoomInfo room, PlayerInfo opponent) {
         RoomUpdate update = new RoomUpdate();
         update.players = room.players;
         update.canStart = room.players.size() == 2;
+        update.opponentInfo = opponent;
         connection.sendTCP(update);
     }
 
@@ -159,7 +165,7 @@ public class ServerApp {
             } else {
                 for (Connection c : server.getConnections()) {
                     if (room.players.contains(players.get(c))) {
-                        updateRoom(c, room);
+                        updateRoom(c, room, null);
                     }
                 }
             }

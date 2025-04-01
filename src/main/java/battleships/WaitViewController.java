@@ -1,10 +1,13 @@
 package battleships;
 
+import common.Network;
+import common.UserSession;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,7 +19,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
+
 import static battleships.Main.popScene;
+import static battleships.Main.pushScene;
 
 public class WaitViewController {
     @FXML
@@ -32,8 +38,18 @@ public class WaitViewController {
     }
 
     @FXML
-    private void handleNext() {
+    private void handleNext() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BoardView.fxml"));
+        Parent modeView = loader.load();
 
+        Stage stage = (Stage) btnNext.getScene().getWindow();
+
+        Scene currentScene = stage.getScene();
+        pushScene(currentScene);
+
+        stage.setScene(new Scene(modeView));
+
+        stage.show();
     }
 
     @FXML
@@ -46,6 +62,31 @@ public class WaitViewController {
     private Text textFoeWaiting, textFoe;
     @FXML
     private Button btnNext;
+    @FXML
+    private Text roomId;
+    @FXML
+    private Text opponentName;
+    @FXML
+    private Text opponentLevel, myName, myLevel;
+
+    public void setRoomId(String roomId) {
+        this.roomId.setText(roomId);
+    }
+
+    public void setOpponentInfo(String opponentName, int opponentLevel) {
+        this.opponentName.setText(opponentName);
+        this.opponentLevel.setText(String.valueOf(opponentLevel));
+
+        avatarFoe.setVisible(true);
+        textFoe.setVisible(true);
+        textFoe.setManaged(true);
+        btnNext.setDisable(false);
+        textFoeWaiting.setVisible(false);
+        textFoeWaiting.setManaged(false);
+        avatarWait.setVisible(false);
+        avatarWait.setManaged(false);
+        btnNext.setOpacity(1);
+    }
 
     @FXML
     public void initialize() {
@@ -54,6 +95,9 @@ public class WaitViewController {
         textFoe.setManaged(false);
         btnNext.setDisable(true);
         btnNext.setOpacity(0.7);
+
+        myLevel.setText(String.valueOf(UserSession.getInstance().getLevel()));
+        myName.setText(UserSession.getInstance().getUsername());
 
         animateDots();
         rotateAvatar();

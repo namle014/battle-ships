@@ -7,6 +7,7 @@ public class Network {
     // Yêu cầu đăng nhập
     public static class LoginRequest {
         public String username;
+        public int level;
     }
 
     // Phản hồi đăng nhập
@@ -19,6 +20,7 @@ public class Network {
     // Thông tin người chơi
     public static class PlayerInfo {
         public String username;
+        public int level;
     }
 
     // Yêu cầu tạo phòng
@@ -55,6 +57,7 @@ public class Network {
     public static class RoomUpdate {
         public List<PlayerInfo> players = new ArrayList<>();
         public boolean canStart; // True nếu đủ 2 người
+        public PlayerInfo opponentInfo;
     }
 
     // Tin nhắn chat

@@ -1,5 +1,7 @@
 package client;
 
+import battleships.PWFModeController;
+import battleships.WaitViewController;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -14,6 +16,7 @@ public class NetworkManager {
     private RoomUpdate currentRoom;
     private String currentRoomId;
     private boolean isJoiningFromList = false;
+    private WaitViewController waitModeController;
 
     public NetworkManager() throws IOException {
         client = new Client();
@@ -55,9 +58,14 @@ public class NetworkManager {
         client.getKryo().register(ArrayList.class);
     }
 
-    public void sendLogin(String username) {
+    public void setWaitModeController(WaitViewController waitModeController) {
+        this.waitModeController = waitModeController;
+    }
+
+    public void sendLogin(String username, int level) {
         LoginRequest login = new LoginRequest();
         login.username = username;
+        login.level  = level;
         client.sendTCP(login);
     }
 
@@ -94,20 +102,22 @@ public class NetworkManager {
     private void handleLoginResponse(LoginResponse response) {
         if (response.success) {
             playerInfo = response.playerInfo;
-            LoginScene.onLoginSuccess();
         }
     }
 
     private void handleRoomCreated(RoomCreatedResponse response) {
         currentRoomId = response.roomId;
-        MainMenuScene.onRoomCreated(response.roomId);
     }
 
     private void handleRoomUpdate(RoomUpdate update) {
         currentRoom = update;
-        RoomWaitingScene.onRoomUpdate(update);
+        if(currentRoom.opponentInfo != null) {
+            PlayerInfo opponentInfo = currentRoom.opponentInfo;
+            System.out.println(opponentInfo.username + " " + opponentInfo.level);
+            waitModeController.setOpponentInfo(opponentInfo.username, opponentInfo.level);
+        }
         if (isJoiningFromList) {
-            RoomListScene.onJoinSuccess();
+            waitModeController.setRoomId(currentRoomId);
         }
     }
 

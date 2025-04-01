@@ -1,6 +1,7 @@
 package battleships;
 
 import common.DailyQuestsSession;
+import common.Network;
 import common.UserSession;
 import database.DatabaseHelper;
 import javafx.application.Application;
@@ -31,6 +32,8 @@ import java.util.UUID;
 import static battleships.Main.pushScene;
 
 public class LoginController  {
+
+
     @FXML
     private PasswordField password;
 
