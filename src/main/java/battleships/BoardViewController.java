@@ -318,4 +318,9 @@ public class BoardViewController extends Application {
         drawGrid();
         for (Ship ship : ships) addShipToGrid(ship);
     }
+
+    public void Ready(){
+
+
+    }
 }
