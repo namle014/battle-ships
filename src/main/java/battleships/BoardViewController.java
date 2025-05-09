@@ -1,5 +1,6 @@
 package battleships;
 
+import client.NetworkManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -7,7 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
@@ -19,19 +22,30 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static battleships.Main.pushScene;
+
 public class BoardViewController extends Application {
+    NetworkManager network;
+    public void setNetwork(NetworkManager network) {
+        this.network = network;
+    }
 
     @FXML
     private GridPane boardGrid;
+    @FXML
+    private Button readyButton;
 
     private List<Ship> ships = new ArrayList<>();
     private Random random = new Random();
     private List<Rectangle> previousCells = new ArrayList<>();
     private Ship draggingShip = null;
+    private boolean isReady = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -320,7 +334,23 @@ public class BoardViewController extends Application {
     }
 
     public void Ready(){
+        isReady = !isReady;
+        readyButton.setText(isReady ? "Ready" : "Not Ready");
+        network.requestReady(isReady, ships);
+    }
 
+    public void startGame(boolean yourTurn, List<Ship> opponentShips) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/PlayGameView.fxml"));
+        Parent playView = loader.load();
+        PlayGameViewController controller = (PlayGameViewController) loader.getController();
+        network.setPlayGameViewController(controller);
+        controller.setNetwork(network);
+        controller.setPlayerTurn(yourTurn);
+        controller.setPlayerShips(ships, opponentShips);
 
+        Stage stage = (Stage) readyButton.getScene().getWindow();
+        stage.setScene(new Scene(playView));
+
+        stage.show();
     }
 }

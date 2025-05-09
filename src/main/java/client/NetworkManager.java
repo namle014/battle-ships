@@ -1,14 +1,15 @@
 package client;
 
-import battleships.PWFModeController;
-import battleships.WaitViewController;
+import battleships.*;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import common.Network.*;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NetworkManager {
     private Client client;
@@ -17,6 +18,8 @@ public class NetworkManager {
     private String currentRoomId;
     private boolean isJoiningFromList = false;
     private WaitViewController waitModeController;
+    private BoardViewController boardViewController;
+    private PlayGameViewController playGameViewController;
 
     public NetworkManager() throws IOException {
         client = new Client();
@@ -37,6 +40,12 @@ public class NetworkManager {
                     handleChat((ChatMessage) object);
                 } else if (object instanceof RoomListResponse) {
                     handleRoomListResponse((RoomListResponse) object);
+                } else if (object instanceof ReadyResponse) {
+                    try {
+                        handleReadyResponse((ReadyResponse) object);
+                    } catch (IOException e) {}
+                } else if (object instanceof AttackResponse) {
+                    handleAttackResponse((AttackResponse) object);
                 }
             }
         });
@@ -56,10 +65,24 @@ public class NetworkManager {
         client.getKryo().register(ChatMessage.class);
         client.getKryo().register(LeaveRoomRequest.class);
         client.getKryo().register(ArrayList.class);
+        client.getKryo().register(ReadyRequest.class);
+        client.getKryo().register(ReadyResponse.class);
+        client.getKryo().register(Ship.class);
+        client.getKryo().register(AttackRequest.class);
+        client.getKryo().register(AttackResponse.class);
+        client.getKryo().register(GameResult.class);
     }
 
     public void setWaitModeController(WaitViewController waitModeController) {
         this.waitModeController = waitModeController;
+    }
+
+    public void setBoardViewController(BoardViewController boardViewController) {
+        this.boardViewController = boardViewController;
+    }
+
+    public void setPlayGameViewController(PlayGameViewController playGameViewController) {
+        this.playGameViewController = playGameViewController;
     }
 
     public void sendLogin(String username, int level) {
@@ -99,6 +122,23 @@ public class NetworkManager {
         client.sendTCP(new RoomListRequest());
     }
 
+    public void requestReady(boolean isReady, List<Ship> ships) {
+        ReadyRequest ready = new ReadyRequest();
+        ready.isReady = isReady;
+        ready.ships = ships;
+        client.sendTCP(ready);
+    }
+
+    public void requestAttack(int col, int row, boolean success, boolean endGame, GameResult result) {
+        AttackRequest request = new AttackRequest();
+        request.col = col;
+        request.row = row;
+        request.success = success;
+        request.endGame = endGame;
+        request.result = result;
+        client.sendTCP(request);
+    }
+
     private void handleLoginResponse(LoginResponse response) {
         if (response.success) {
             playerInfo = response.playerInfo;
@@ -115,6 +155,8 @@ public class NetworkManager {
             PlayerInfo opponentInfo = currentRoom.opponentInfo;
             System.out.println(opponentInfo.username + " " + opponentInfo.level);
             waitModeController.setOpponentInfo(opponentInfo.username, opponentInfo.level);
+        } else if (waitModeController != null) {
+            waitModeController.setNoOpponent();
         }
         if (isJoiningFromList) {
             waitModeController.setRoomId(currentRoomId);
@@ -127,6 +169,23 @@ public class NetworkManager {
 
     private void handleRoomListResponse(RoomListResponse response) {
         RoomListScene.onRoomListReceived(response); // Nhận bất kỳ lúc nào từ server
+    }
+
+    private void handleReadyResponse(ReadyResponse response) throws IOException {
+        Platform.runLater(() -> {
+            try {
+                System.out.println(response.startGame);
+                if (response.startGame) boardViewController.startGame(response.yourTurn, response.enemyShips);
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
+            }
+        });
+    }
+
+    private void handleAttackResponse(AttackResponse response) {
+        Platform.runLater(() -> {
+            playGameViewController.handleAttacked(response.col, response.row, response.success, response.endGame, response.result);
+        });
     }
 
     public PlayerInfo getPlayerInfo() {

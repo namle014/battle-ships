@@ -1,3 +1,5 @@
+import battleships.GameResult;
+import battleships.Ship;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -49,6 +51,10 @@ public class ServerApp {
                     handleLeaveRoom(connection);
                 } else if (object instanceof RoomListRequest) {
                     handleRoomListRequest(connection);
+                } else if (object instanceof ReadyRequest) {
+                    handleReadyRequest(connection, (ReadyRequest) object);
+                } else if (object instanceof AttackRequest) {
+                    handleAttackRequest(connection, (AttackRequest) object);
                 }
             }
         });
@@ -68,6 +74,12 @@ public class ServerApp {
         server.getKryo().register(ChatMessage.class);
         server.getKryo().register(LeaveRoomRequest.class);
         server.getKryo().register(ArrayList.class);
+        server.getKryo().register(ReadyRequest.class);
+        server.getKryo().register(ReadyResponse.class);
+        server.getKryo().register(Ship.class);
+        server.getKryo().register(AttackRequest.class);
+        server.getKryo().register(AttackResponse.class);
+        server.getKryo().register(GameResult.class);
     }
 
     private void handleLogin(Connection connection, LoginRequest request) {
@@ -139,6 +151,56 @@ public class ServerApp {
         RoomListResponse response = new RoomListResponse();
         response.rooms.addAll(rooms.values()); // Thêm tất cả phòng hiện có
         connection.sendTCP(response);
+    }
+
+    private void handleReadyRequest(Connection connection, ReadyRequest request) {
+        ReadyResponse response = new ReadyResponse();
+        response.startGame = true;
+        PlayerInfo player = players.get(connection);
+        RoomInfo room = findRoomByPlayer(player);
+        if (player.equals(room.players.get(0))) {
+            room.Player1ships = request.ships;
+        } else {
+            room.Player2ships = request.ships;
+        }
+
+        if (player != null) { player.isReady = request.isReady; }
+        if (room != null) {
+            for (Connection c : server.getConnections()) {
+                if (room.players.contains(players.get(c))) {
+                    response.startGame = (response.startGame && players.get(c).isReady);
+                }
+            }
+            for (Connection c : server.getConnections()) {
+                if (room.players.contains(players.get(c))) {
+                    response.yourTurn = (players.get(c).equals(room.players.get(0)) ? true : false);
+                    if (response.startGame) {
+                        if (response.yourTurn) response.enemyShips = room.Player2ships;
+                        else response.enemyShips = room.Player1ships;
+                    }
+                    c.sendTCP(response);
+                }
+            }
+        }
+    }
+
+    private void handleAttackRequest(Connection connection, AttackRequest request) {
+        AttackResponse response = new AttackResponse();
+        response.col = request.col;
+        response.row = request.row;
+        response.success = request.success;
+        response.endGame = request.endGame;
+        response.result = request.result;
+
+        PlayerInfo player = players.get(connection);
+        RoomInfo room = findRoomByPlayer(player);
+        if (room != null) {
+            for (Connection c : server.getConnections()) {
+                if (room.players.contains(players.get(c)) && !players.get(c).equals(player)) {
+                    c.sendTCP(response);
+                }
+            }
+        }
     }
 
     private void updateRoom(Connection connection, RoomInfo room, PlayerInfo opponent) {

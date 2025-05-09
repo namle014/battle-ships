@@ -5,6 +5,9 @@ public class Ship {
     private String id;
     private int startX, startY, size;
     private boolean horizontal;
+    private int attackCount;
+
+    public Ship(){}
 
     public Ship(int startX, int startY, int size, boolean horizontal) {
         this.startX = startX;
@@ -12,6 +15,11 @@ public class Ship {
         this.size = size;
         this.horizontal = horizontal;
         this.id = "Ship-" + (++counter);
+        this.attackCount = 0;
+    }
+
+    public void Attacked() {
+        this.attackCount += 1;
     }
 
     public String getId() {
@@ -29,6 +37,8 @@ public class Ship {
     public int getSize() {
         return size;
     }
+
+    public int getAttackCount() { return attackCount; }
 
     public boolean isHorizontal() {
         return horizontal;

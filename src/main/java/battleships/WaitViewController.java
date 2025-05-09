@@ -1,5 +1,6 @@
 package battleships;
 
+import client.NetworkManager;
 import common.Network;
 import common.UserSession;
 import javafx.animation.KeyFrame;
@@ -25,11 +26,14 @@ import static battleships.Main.popScene;
 import static battleships.Main.pushScene;
 
 public class WaitViewController {
+    private NetworkManager network;
+
     @FXML
     private Button btnBack;
 
     @FXML
     private void handleBack() {
+        network.leaveRoom();
         Scene previousScene = popScene();
         if (previousScene != null) {
             Stage stage = (Stage) btnBack.getScene().getWindow();
@@ -41,6 +45,9 @@ public class WaitViewController {
     private void handleNext() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BoardView.fxml"));
         Parent modeView = loader.load();
+        BoardViewController controller = (BoardViewController) loader.getController();
+        controller.setNetwork(network);
+        network.setBoardViewController(controller);
 
         Stage stage = (Stage) btnNext.getScene().getWindow();
 
@@ -69,6 +76,10 @@ public class WaitViewController {
     @FXML
     private Text opponentLevel, myName, myLevel;
 
+    public void setNetwork(NetworkManager network) {
+        this.network = network;
+    }
+
     public void setRoomId(String roomId) {
         this.roomId.setText(roomId);
     }
@@ -86,6 +97,18 @@ public class WaitViewController {
         avatarWait.setVisible(false);
         avatarWait.setManaged(false);
         btnNext.setOpacity(1);
+    }
+
+    public void setNoOpponent() {
+        avatarFoe.setVisible(false);
+        textFoe.setVisible(false);
+        textFoe.setManaged(false);
+        btnNext.setDisable(true);
+        textFoeWaiting.setVisible(true);
+        textFoeWaiting.setManaged(true);
+        avatarWait.setVisible(true);
+        avatarWait.setManaged(false);
+        btnNext.setOpacity(0.7);
     }
 
     @FXML

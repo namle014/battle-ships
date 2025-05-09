@@ -1,15 +1,17 @@
 package battleships;
 
+import client.NetworkManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -18,10 +20,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static battleships.Main.pushScene;
+
 public class PlayGameViewController extends Application {
+    NetworkManager network;
+    public void setNetwork(NetworkManager network) {
+        this.network = network;
+    }
 
     @FXML
     private GridPane boardGridPlayer;
@@ -49,11 +59,14 @@ public class PlayGameViewController extends Application {
 
     private List<Ship> playerShips = new ArrayList<>();
     private List<Ship> opponentShips = new ArrayList<>();
-    private boolean isPlayerTurn = true;
-
-    public static void main(String[] args) {
-        launch(args);
+    private boolean isPlayerTurn;
+    public void setPlayerTurn(boolean isPlayerTurn) {
+        this.isPlayerTurn = isPlayerTurn;
     }
+    private GameResult gameResult;
+    private GameResult opponentGameResult;
+    private int streak;
+    private int turn;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -66,32 +79,19 @@ public class PlayGameViewController extends Application {
 
         FXMLLoader loader = new FXMLLoader(location);
         BorderPane root = loader.load();
-        PlayGameViewController controller = loader.getController();
         Scene scene = new Scene(root, 1500, 750);
         primaryStage.setTitle("Battle Ships");
         primaryStage.setScene(scene);
 
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                controller.switchTurn();
-            }
-        });
-
         primaryStage.show();
+
     }
 
     @FXML
-    public void initialize() {
-        setupGrid(boardGridPlayer, Color.web("#0066CC"));
-        setupGrid(boardGridOpponent, Color.web("#FF6600"));
-
-        createSampleShips();
-        drawShips(boardGridPlayer, playerShips, Color.web("#0066CC"));
-        drawShips(boardGridOpponent, opponentShips, Color.web("#FF6600"));
-
-        if (playerName != null) {
-            playerName.setText("Player 1");
-        }
+    public void initialize() throws IOException {
+        System.out.println("Open play game view");
+        setupGrid(boardGridPlayer, Color.web("#0066CC"), false);
+        setupGrid(boardGridOpponent, Color.web("#FF6600"), true);
 
         // Thiết lập khung chat
         if (chatArea != null) {
@@ -102,11 +102,12 @@ public class PlayGameViewController extends Application {
         if (sendButton != null && messageField != null) {
             sendButton.setOnAction(event -> sendMessage());
         }
-
-        updateTurnUI();
+        gameResult = new GameResult(0, 0, 0, 0, 0, 0);
+        streak = 0;
+        turn = 0;
     }
 
-    private void setupGrid(GridPane grid, Color strokeColor) {
+    private void setupGrid(GridPane grid, Color strokeColor, boolean canClick) {
         grid.getChildren().clear();
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
@@ -152,26 +153,50 @@ public class PlayGameViewController extends Application {
                 cell.setFill(Color.color(1.0, 1.0, 1.0, 0.5));
                 cell.setStroke(strokeColor);
                 cell.setStrokeWidth(1);
+
+                final int rowIndex = row;
+                final int colIndex = col;
+
+                if (canClick) {
+                    cell.setOnMouseClicked(event -> {
+                        if (isPlayerTurn) {
+                            attack(colIndex, rowIndex, cell);
+                        }
+                    });
+                }
                 grid.add(cell, col, row);
             }
         }
     }
 
-    private void createSampleShips() {
-        playerShips.add(new Ship(1, 1, 5, true));
-        playerShips.add(new Ship(3, 3, 4, false));
-        playerShips.add(new Ship(5, 5, 3, true));
+    private Rectangle getRectangleAt(GridPane grid, int col, int row) {
+        for (Node node : grid.getChildren()) {
+            if (GridPane.getColumnIndex(node) != null && GridPane.getRowIndex(node) != null) {
+                if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                    if (node instanceof Rectangle) {
+                        return (Rectangle) node;
+                    }
+                }
+            }
+        }
+        return null; // Nếu không tìm thấy
+    }
 
-        opponentShips.add(new Ship(2, 2, 5, false));
-        opponentShips.add(new Ship(4, 4, 3, true));
-        opponentShips.add(new Ship(6, 6, 2, false));
+    public void setPlayerShips(List<Ship> playerShips, List<Ship> opponentShips) {
+        if (playerName != null) {
+            playerName.setText(network.getPlayerInfo().username);
+        }
+        this.playerShips = playerShips;
+        this.opponentShips = opponentShips;
+        drawShips(boardGridPlayer, playerShips, Color.web("#0066CC"));
+
+        updateTurnUI();
     }
 
     private void drawShips(GridPane grid, List<Ship> ships, Color shipColor) {
         for (Ship ship : ships) {
             for (int i = 0; i < ship.getSize(); i++) {
                 Rectangle rectangle = new Rectangle(45, 45, shipColor);
-                rectangle.setStroke(Color.BLACK);
                 rectangle.setStrokeWidth(1);
 
                 if (ship.isHorizontal()) {
@@ -181,6 +206,44 @@ public class PlayGameViewController extends Application {
                 }
             }
         }
+    }
+
+    private void attack(int col, int row, Rectangle cell) {
+        turn += 1;
+        boolean success = false;
+        for (Ship ship : opponentShips) {
+            if (ship.isOccupied(col, row)) {
+                success = true;
+                ship.Attacked();
+            }
+        }
+
+        cell.setFill(success ? Color.GREEN : Color.RED);
+        cell.setOnMouseClicked(null);
+        boolean win = gameResult.getHits() == 17;
+        if (win) {
+            endGame(win);
+        }
+        updateGameResult(success);
+        network.requestAttack(col, row, success, win, gameResult);
+        if (!success) switchTurn();
+    }
+
+    public void handleAttacked(int col, int row, boolean success, boolean win, GameResult result) {
+        turn += 1;
+        this.opponentGameResult = result;
+        if (!success) {
+            Rectangle rec = getRectangleAt(boardGridPlayer, col, row);
+            if (rec != null) {
+                rec.setFill(Color.RED);
+            }
+            switchTurn();
+        } else {
+            Rectangle rectangle = new Rectangle(45, 45, Color.GREEN);
+            rectangle.setStrokeWidth(1);
+            boardGridPlayer.add(rectangle, col, row);
+        }
+        if (win) endGame(!win);
     }
 
     private void switchTurn() {
@@ -232,5 +295,52 @@ public class PlayGameViewController extends Application {
             chatArea.appendText(playerName.getText() + ": " + message + "\n");
             messageField.clear(); // Xóa ô nhập sau khi gửi
         }
+    }
+
+    public void endGame (boolean win) {
+        if (win) {
+            System.out.println("You Win !");
+        }
+        else {
+            System.out.println("You Lose !");
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
+            Parent resultView = loader.load();
+            ResultViewController controller = loader.getController();
+            controller.setGameResults(gameResult, opponentGameResult, turn);
+
+            Stage stage = (Stage) playerName.getScene().getWindow();
+
+            Scene currentScene = stage.getScene();
+            pushScene(currentScene);
+
+            stage.setScene(new Scene(resultView));
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateGameResult(boolean success) {
+        int count = 0;
+        for (Ship ship : opponentShips) {
+            if (ship.getAttackCount() == ship.getSize()) count += 1;
+        }
+        gameResult.setShipsDestroyed(count);
+        if (success) {
+            gameResult.setHits(gameResult.getHits() + 1);
+            streak += 1;
+            gameResult.setBestStreak(Math.max(gameResult.getBestStreak(), streak));
+        }
+        else {
+            gameResult.setMisses(gameResult.getMisses() + 1);
+            streak = 0;
+        }
+        int accuracy = gameResult.getHits() * 100 / (gameResult.getHits() + gameResult.getMisses());
+        gameResult.setAccuracy(accuracy);
+        gameResult.setScore(gameResult.getBestStreak() * 3 + gameResult.getHits() + gameResult.getAccuracy());
     }
 }

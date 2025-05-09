@@ -17,10 +17,32 @@ public class GameResult {
         this.score=score;
     }
 
+    public GameResult() {}
+
     public int getShipsDestroyed() { return shipsDestroyed; }
     public int getHits() { return hits; }
     public int getMisses() { return misses; }
     public int getAccuracy() { return accuracy; }
     public int getBestStreak() { return bestStreak; }
     public int getScore() { return score; }
+
+    public void setShipsDestroyed(int shipsDestroyed) {
+        this.shipsDestroyed = shipsDestroyed;
+    }
+
+    public void setHits(int hits) {
+        this.hits = hits;
+    }
+    public void setMisses(int misses) {
+        this.misses = misses;
+    }
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
+    }
+    public void setBestStreak(int bestStreak) {
+        this.bestStreak = bestStreak;
+    }
+    public void setScore(int score) {
+        this.score = score;
+    }
 }

@@ -117,7 +117,7 @@
     <bottom>
         <HBox alignment="BOTTOM_CENTER" spacing="10">
             <padding><Insets bottom="25" left="15" right="15"/></padding>
-            <Button onAction="#Ready" styleClass="button-primary" text="Ready!" prefWidth="360" prefHeight="50"/>
+            <Button fx:id="readyButton" onAction="#Ready" styleClass="button-primary" text="Not Ready" prefWidth="360" prefHeight="50"/>
         </HBox>
     </bottom>
 </BorderPane>

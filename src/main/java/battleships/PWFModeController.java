@@ -65,6 +65,7 @@ public class PWFModeController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/WaitView.fxml"));
             Parent modeView = loader.load();
             WaitViewController controller = (WaitViewController) loader.getController();
+            controller.setNetwork(network);
             network.setWaitModeController(controller);
 
             Stage stage = (Stage) btnCreateGame.getScene().getWindow();
@@ -92,6 +93,7 @@ public class PWFModeController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/WaitView.fxml"));
         Parent modeView = loader.load();
         WaitViewController controller = (WaitViewController) loader.getController();
+        controller.setNetwork(network);
         network.setWaitModeController(controller);
         controller.setRoomId(network.getCurrentRoomId());
 
