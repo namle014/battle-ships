@@ -3,6 +3,7 @@ package battleships;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,16 +13,25 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
+import static battleships.Main.pushScene;
+
 public class ResultViewController extends Application {
 
     @FXML
     private Label turnsLabel;
     @FXML
-    private TextFlow shipsDestroyedLeft, hitsLeft, missesLeft, accuracyLeft, streakLeft,scoreLeft;
+    private TextFlow shipsDestroyedLeft, hitsLeft, missesLeft, accuracyLeft, streakLeft, scoreLeft;
     @FXML
-    private TextFlow shipsDestroyedRight, hitsRight, missesRight, accuracyRight, streakRight,scoreRight;
+    private TextFlow shipsDestroyedRight, hitsRight, missesRight, accuracyRight, streakRight, scoreRight;
+    @FXML
+    private Button nextButton;
 
 
+    private GameResult leftPlayer;
+    private GameResult rightPlayer;
+    private int totalTurns;
 
     public static void main(String[] args) {
         launch(args);
@@ -34,8 +44,8 @@ public class ResultViewController extends Application {
 
         ResultViewController controller = loader.getController();
         controller.setGameResults(
-                new GameResult(4, 15, 29, 34, 4,121),
-                new GameResult(5, 17, 29, 36, 5,121),
+                new GameResult(4, 15, 29, 34, 4, 121),
+                new GameResult(5, 17, 29, 36, 5, 121),
                 58
         );
 
@@ -45,7 +55,50 @@ public class ResultViewController extends Application {
         stage.show();
     }
 
+    @FXML
+    private void initialize() {
+
+    }
+
+    @FXML
+    private void handleNext() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EndGameView.fxml"));
+            Parent endGameView = loader.load();
+
+            EndGameController endGameController = loader.getController();
+
+            endGameController.updateProgressBar1();
+
+            if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
+                endGameController.updateProgressBar3();
+            } else if (rightPlayer != null && rightPlayer.getAccuracy() >= 35) {
+                endGameController.updateProgressBar3();
+            }
+
+
+            Stage stage = (Stage) nextButton.getScene().getWindow();
+
+
+            Scene currentScene = stage.getScene();
+            pushScene(currentScene);
+
+
+            stage.setScene(new Scene(endGameView));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading EndGame view: " + e.getMessage());
+        }
+    }
+
     public void setGameResults(GameResult left, GameResult right, int turns) {
+
+        this.leftPlayer = left;
+        this.rightPlayer = right;
+        this.totalTurns = turns;
 
         turnsLabel.setText(String.valueOf(turns));
 
@@ -55,7 +108,6 @@ public class ResultViewController extends Application {
         updateTextFlow(accuracyLeft, left.getAccuracy() + "%");
         updateTextFlow(streakLeft, String.valueOf(left.getBestStreak()));
         updateTextFlow(scoreLeft, String.valueOf(left.getScore()));
-
 
         updateTextFlow(shipsDestroyedRight, right.getShipsDestroyed() + "/5");
         updateTextFlow(hitsRight, String.valueOf(right.getHits()));
@@ -69,5 +121,18 @@ public class ResultViewController extends Application {
         if (!textFlow.getChildren().isEmpty() && textFlow.getChildren().get(0) instanceof Text) {
             ((Text) textFlow.getChildren().get(0)).setText(newText);
         }
+    }
+
+
+    public GameResult getLeftPlayer() {
+        return leftPlayer;
+    }
+
+    public GameResult getRightPlayer() {
+        return rightPlayer;
+    }
+
+    public int getTotalTurns() {
+        return totalTurns;
     }
 }

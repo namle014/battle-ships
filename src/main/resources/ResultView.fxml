@@ -149,7 +149,8 @@
     <bottom>
         <HBox alignment="BOTTOM_CENTER" spacing="10">
             <padding><Insets bottom="40" left="15" right="15"/></padding>
-            <Button styleClass="button-primary" text="Next" prefWidth="360" prefHeight="50"/>
+            <Button fx:id="nextButton" styleClass="button-primary" text="Next"
+                    onAction="#handleNext" prefWidth="360" prefHeight="50"/>
         </HBox>
     </bottom>
 

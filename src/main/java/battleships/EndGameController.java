@@ -56,7 +56,7 @@ public class EndGameController {
         updateProgressBar3();
     }
 
-    private void updateProgressBar3() {
+    public void updateProgressBar3() {
         Timeline timeline = new Timeline();
         if (progressBar3.getProgress() >= 1) {
             return;
@@ -129,7 +129,7 @@ public class EndGameController {
         progressLabel3.setText(String.format("%d/1", progress3.getCurrentProgress()));
     }
 
-    private void updateProgressBar2() {
+    public void updateProgressBar2() {
         Timeline timeline = new Timeline();
         if (progressBar2.getProgress() >= 1) {
             return;
@@ -173,7 +173,7 @@ public class EndGameController {
         timeline.play();
     }
 
-    private void updateProgressBar1() {
+    public void updateProgressBar1() {
         Timeline timeline = new Timeline();
         if (progressBar1.getProgress() >= 1) {
             return;
