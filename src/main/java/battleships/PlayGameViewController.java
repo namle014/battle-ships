@@ -222,11 +222,11 @@ public class PlayGameViewController extends Application {
 
         cell.setFill(success ? Color.GREEN : Color.RED);
         cell.setOnMouseClicked(null);
+        updateGameResult(success);
         boolean win = gameResult.getHits() == 17;
         if (win) {
             endGame(win);
         }
-        updateGameResult(success);
         network.requestAttack(col, row, success, win, gameResult);
         if (!success) switchTurn();
     }
