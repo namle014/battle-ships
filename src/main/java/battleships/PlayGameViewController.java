@@ -220,7 +220,6 @@ public class PlayGameViewController extends Application {
                 ship.Attacked();
                 if (ship.getAttackCount() == ship.getSize()) {
                     shipsunk = true;
-                    handleShipSunk();
                 }
             }
         }
@@ -229,6 +228,7 @@ public class PlayGameViewController extends Application {
         cell.setOnMouseClicked(null);
         updateGameResult(success);
         boolean win = gameResult.getHits() == 17;
+        if (shipsunk && !win) handleShipSunk();
         if (win) {
             endGame(win);
         }
