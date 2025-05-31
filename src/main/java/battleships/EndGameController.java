@@ -1,5 +1,6 @@
 package battleships;
 
+import client.NetworkManager;
 import common.DailyQuestsSession;
 import common.ShowFireworksLevelUp;
 import common.UserSession;
@@ -42,6 +43,12 @@ import java.util.UUID;
 import static battleships.Main.pushScene;
 
 public class EndGameController {
+    private NetworkManager network;
+
+    public void setNetwork(NetworkManager network) {
+        this.network = network;
+    }
+
     @FXML
     private Button btnMainMenu, btnRematch;
 
@@ -269,6 +276,7 @@ public class EndGameController {
 
     @FXML
     private void handleMainMenu() throws IOException {
+        network.leaveRoom();
         UserSession session = UserSession.getInstance();
         DatabaseHelper.updateSession(session.getUsername());
         LoginController.getPlayerDailyQuests(session.getUserId());

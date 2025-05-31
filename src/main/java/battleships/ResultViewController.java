@@ -1,5 +1,6 @@
 package battleships;
 
+import client.NetworkManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,11 @@ import java.io.IOException;
 import static battleships.Main.pushScene;
 
 public class ResultViewController extends Application {
+    private NetworkManager network;
+
+    public void setNetwork(NetworkManager network) {
+        this.network = network;
+    }
 
     @FXML
     private Label turnsLabel;
@@ -68,6 +74,7 @@ public class ResultViewController extends Application {
             Parent endGameView = loader.load();
 
             EndGameController endGameController = loader.getController();
+            endGameController.setNetwork(network);
 
             endGameController.updateProgressBar1();
 

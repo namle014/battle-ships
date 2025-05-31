@@ -327,6 +327,7 @@ public class PlayGameViewController extends Application {
                 FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
                 Parent resultView = resultLoader.load();
                 ResultViewController controller = resultLoader.getController();
+                controller.setNetwork(network);
                 controller.setGameResults(gameResult, opponentGameResult, turn);
 
                 stage.setScene(tempScene);
