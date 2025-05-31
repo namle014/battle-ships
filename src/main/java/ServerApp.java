@@ -191,6 +191,7 @@ public class ServerApp {
         response.success = request.success;
         response.endGame = request.endGame;
         response.result = request.result;
+        response.shipsunk = request.shipsunk;
 
         PlayerInfo player = players.get(connection);
         RoomInfo room = findRoomByPlayer(player);

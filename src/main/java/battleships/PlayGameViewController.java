@@ -213,10 +213,15 @@ public class PlayGameViewController extends Application {
     private void attack(int col, int row, Rectangle cell) {
         turn += 1;
         boolean success = false;
+        boolean shipsunk = false;
         for (Ship ship : opponentShips) {
             if (ship.isOccupied(col, row)) {
                 success = true;
                 ship.Attacked();
+                if (ship.getAttackCount() == ship.getSize()) {
+                    shipsunk = true;
+                    handleShipSunk();
+                }
             }
         }
 
@@ -227,11 +232,11 @@ public class PlayGameViewController extends Application {
         if (win) {
             endGame(win);
         }
-        network.requestAttack(col, row, success, win, gameResult);
+        network.requestAttack(col, row, success, win, gameResult, shipsunk);
         if (!success) switchTurn();
     }
 
-    public void handleAttacked(int col, int row, boolean success, boolean win, GameResult result) {
+    public void handleAttacked(int col, int row, boolean success, boolean win, GameResult result, boolean shipsunk) {
         turn += 1;
         this.opponentGameResult = result;
         if (!success) {
@@ -245,6 +250,7 @@ public class PlayGameViewController extends Application {
             rectangle.setStrokeWidth(1);
             boardGridPlayer.add(rectangle, col, row);
         }
+        if (shipsunk && !win) handleShipSunk();
         if (win) endGame(!win);
     }
 
@@ -361,5 +367,36 @@ public class PlayGameViewController extends Application {
         int accuracy = gameResult.getHits() * 100 / (gameResult.getHits() + gameResult.getMisses());
         gameResult.setAccuracy(accuracy);
         gameResult.setScore(gameResult.getBestStreak() * 3 + gameResult.getHits() + gameResult.getAccuracy());
+    }
+
+    private void handleShipSunk() {
+        Platform.runLater(() -> {
+            Stage stage = (Stage) playerName.getScene().getWindow();
+
+            Main.pushScene(playerName.getScene());
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShipSunkView.fxml"));
+                Parent shipSunkView = loader.load();
+                Scene ssScene = new Scene(shipSunkView);
+
+                stage.setScene(ssScene);
+                stage.show();
+
+                // Sau 3 giây, chuyển sang ResultView.fxml
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(3000); // Chờ 3 giây
+                        Platform.runLater(() -> {
+                            stage.setScene(Main.popScene());
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

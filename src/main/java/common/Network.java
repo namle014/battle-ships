@@ -90,6 +90,7 @@ public class Network {
         public boolean success;
         public boolean endGame;
         public GameResult result;
+        public boolean shipsunk;
     }
 
     public static class AttackResponse {
@@ -98,5 +99,6 @@ public class Network {
         public boolean success;
         public boolean endGame;
         public GameResult result;
+        public boolean shipsunk;
     }
 }

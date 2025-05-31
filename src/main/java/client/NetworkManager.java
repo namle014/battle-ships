@@ -129,13 +129,14 @@ public class NetworkManager {
         client.sendTCP(ready);
     }
 
-    public void requestAttack(int col, int row, boolean success, boolean endGame, GameResult result) {
+    public void requestAttack(int col, int row, boolean success, boolean endGame, GameResult result, boolean shipsunk) {
         AttackRequest request = new AttackRequest();
         request.col = col;
         request.row = row;
         request.success = success;
         request.endGame = endGame;
         request.result = result;
+        request.shipsunk = shipsunk;
         client.sendTCP(request);
     }
 
@@ -184,7 +185,7 @@ public class NetworkManager {
 
     private void handleAttackResponse(AttackResponse response) {
         Platform.runLater(() -> {
-            playGameViewController.handleAttacked(response.col, response.row, response.success, response.endGame, response.result);
+            playGameViewController.handleAttacked(response.col, response.row, response.success, response.endGame, response.result, response.shipsunk);
         });
     }
 
