@@ -1,7 +1,9 @@
 package battleships;
 
 import client.NetworkManager;
+import common.Network;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -292,9 +294,13 @@ public class PlayGameViewController extends Application {
 
         String message = messageField.getText().trim();
         if (!message.isEmpty()) {
-            chatArea.appendText(playerName.getText() + ": " + message + "\n");
+            network.sendChat(message);
             messageField.clear(); // Xóa ô nhập sau khi gửi
         }
+    }
+
+    public void onChatReceived(Network.ChatMessage chat) {
+        Platform.runLater(() -> chatArea.appendText(chat.sender + ": " + chat.message + "\n"));
     }
 
     public void endGame (boolean win) {

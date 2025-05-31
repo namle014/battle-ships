@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseHelper {
-    private static final String URL = "jdbc:postgresql://localhost:5432/battleship";
+    private static final String URL = "jdbc:postgresql://192.168.43.15:5432/battleship";
     private static final String USER = "postgres";
     private static final String PASSWORD = "26122004";
 

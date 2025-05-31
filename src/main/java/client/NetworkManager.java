@@ -25,7 +25,7 @@ public class NetworkManager {
         client = new Client();
         registerClasses();
         client.start();
-        client.connect(5000, "localhost", 54555, 54777);
+        client.connect(5000, "192.168.43.15", 54555, 54777);
 
         client.addListener(new Listener() {
             @Override
@@ -164,7 +164,7 @@ public class NetworkManager {
     }
 
     private void handleChat(ChatMessage chat) {
-        GamePlayScene.onChatReceived(chat);
+        playGameViewController.onChatReceived(chat);
     }
 
     private void handleRoomListResponse(RoomListResponse response) {
