@@ -308,41 +308,33 @@ public class PlayGameViewController extends Application {
             Stage stage = (Stage) playerName.getScene().getWindow();
 
             String fxmlPath = win ? "/WinView.fxml" : "/LoseView.fxml";
-            String title = win ? "Win Screen" : "Lose Screen";
 
             try {
+                //scene 1
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent tempView = loader.load();
-
                 Scene tempScene = new Scene(tempView);
-                pushScene(stage.getScene()); // Lưu scene hiện tại nếu cần quay lại
+
+                //scene 2
+                FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
+                Parent resultView = resultLoader.load();
+                ResultViewController controller = resultLoader.getController();
+                controller.setGameResults(gameResult, opponentGameResult, turn);
 
                 stage.setScene(tempScene);
-                stage.setTitle(title);
+                stage.setTitle("Game Result");
                 stage.show();
 
                 // Sau 3 giây, chuyển sang ResultView.fxml
                 new Thread(() -> {
                     try {
                         Thread.sleep(3000); // Chờ 3 giây
+                        Platform.runLater(() -> {
+                            stage.setScene(new Scene(resultView));
+                        });
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
-                    Platform.runLater(() -> {
-                        try {
-                            FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
-                            Parent resultView = resultLoader.load();
-                            ResultViewController controller = resultLoader.getController();
-                            controller.setGameResults(gameResult, opponentGameResult, turn);
-
-                            stage.setScene(new Scene(resultView));
-                            stage.setTitle("Game Result");
-                            stage.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
                 }).start();
 
             } catch (IOException e) {
