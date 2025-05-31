@@ -69,7 +69,6 @@ public class PlayGameViewController extends Application {
     private GameResult opponentGameResult;
     private int streak;
     private int turn;
-    private boolean firstHit = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -233,7 +232,7 @@ public class PlayGameViewController extends Application {
         if (win) {
             endGame(win);
         }
-        if (turn == 1 && firstHit) gameResult.setFirstHit(true);
+        if (turn == 1 && success) gameResult.setFirstHit(true);
         network.requestAttack(col, row, success, win, gameResult, shipsunk);
         if (!success) switchTurn();
     }
