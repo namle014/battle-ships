@@ -184,9 +184,8 @@ public class NetworkManager {
     }
 
     private void handleAttackResponse(AttackResponse response) {
-        Platform.runLater(() -> {
-            playGameViewController.handleAttacked(response.col, response.row, response.success, response.endGame, response.result, response.shipsunk);
-        });
+
+        playGameViewController.handleAttacked(response.col, response.row, response.success, response.endGame, response.result, response.shipsunk);
     }
 
     public PlayerInfo getPlayerInfo() {

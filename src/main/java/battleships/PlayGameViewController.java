@@ -237,7 +237,8 @@ public class PlayGameViewController extends Application {
     }
 
     public void handleAttacked(int col, int row, boolean success, boolean win, GameResult result, boolean shipsunk) {
-        turn += 1;
+        Platform.runLater(() -> {
+                turn += 1;
         this.opponentGameResult = result;
         if (!success) {
             Rectangle rec = getRectangleAt(boardGridPlayer, col, row);
@@ -252,6 +253,7 @@ public class PlayGameViewController extends Application {
         }
         if (shipsunk && !win) handleShipSunk();
         if (win) endGame(!win);
+        });
     }
 
     private void switchTurn() {
