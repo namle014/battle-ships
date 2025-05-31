@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="battleships.LoseViewController"
+            prefHeight="400.0"
+            prefWidth="600.0"
+            style="-fx-background-image: url('images/lose_image.png');
+                   -fx-background-size: cover;
+                   -fx-background-repeat: no-repeat;
+                   -fx-background-position: center;">
+
+    <top>
+        <StackPane>
+            <padding><Insets top="120"/></padding>
+
+            <VBox alignment="CENTER">
+
+                <Region
+                        style="-fx-background-color: linear-gradient(to right, rgba(255, 255, 255, 0.1) 70%, rgba(255, 255, 255, 1) 100%);
+                               -fx-border-color: linear-gradient(to right, rgba(255, 0, 0, 0.1) 70%, rgba(255, 0, 0, 1) 100%);
+                               -fx-background-radius: 0 20 20 0;
+                               -fx-border-radius: 0 20 20 0;
+                               -fx-border-width: 4px 3px 4px 0;"
+                        translateX="-900"
+                        minHeight="10"
+                        maxHeight="10"/>
+
+                <Region prefHeight="8" />
+
+                <StackPane>
+
+                    <Region fx:id="backgroundRegion"
+                            style="-fx-background-color: linear-gradient(to right, rgba(255, 0, 0, 0.1) 0%,
+                                                          rgba(255, 0, 0, 0.5) 50%,
+                                                          rgba(255, 0, 0, 0.1) 100%);
+                                   -fx-border-color: linear-gradient(to right, rgba(255, 0, 0, 0.1) 0%,
+                                                                     rgba(255, 0, 0, 1) 50%,
+                                                                     rgba(255, 0, 0, 0.1) 100%);
+                                   -fx-border-width: 2px 0 2px 0;"
+                            prefWidth="Infinity"
+                            minHeight="100"
+                            maxHeight="100"/>
+
+                    <Label fx:id="LoseLabel" text="DEFEAT"
+                           style="-fx-font-size: 60px; -fx-font-weight: bold;
+                                  -fx-text-fill: white;
+                                  -fx-effect: dropshadow(gaussian, red, 10, 0.8, 3, 3);"/>
+                </StackPane>
+
+                <Region prefHeight="8" />
+
+                <Region
+                        style="-fx-background-color: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.1) 30%);
+                               -fx-border-color: linear-gradient(to right, rgba(255, 0, 0, 1) 0%, rgba(255, 0, 0, 0.1) 30%);
+                               -fx-background-radius: 20 0 0 20;
+                               -fx-border-radius: 20 0 0 20;
+                               -fx-border-width: 4px 0 4px 3px;"
+                        translateX="900"
+                        minHeight="10"
+                        maxHeight="10"/>
+
+            </VBox>
+        </StackPane>
+    </top>
+
+</BorderPane>

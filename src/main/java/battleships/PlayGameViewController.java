@@ -303,31 +303,52 @@ public class PlayGameViewController extends Application {
         Platform.runLater(() -> chatArea.appendText(chat.sender + ": " + chat.message + "\n"));
     }
 
-    public void endGame (boolean win) {
-        if (win) {
-            System.out.println("You Win !");
-        }
-        else {
-            System.out.println("You Lose !");
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
-            Parent resultView = loader.load();
-            ResultViewController controller = loader.getController();
-            controller.setGameResults(gameResult, opponentGameResult, turn);
-
+    public void endGame(boolean win) {
+        Platform.runLater(() -> {
             Stage stage = (Stage) playerName.getScene().getWindow();
 
-            Scene currentScene = stage.getScene();
-            pushScene(currentScene);
+            String fxmlPath = win ? "/WinView.fxml" : "/LoseView.fxml";
+            String title = win ? "Win Screen" : "Lose Screen";
 
-            stage.setScene(new Scene(resultView));
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                Parent tempView = loader.load();
 
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                Scene tempScene = new Scene(tempView);
+                pushScene(stage.getScene()); // Lưu scene hiện tại nếu cần quay lại
+
+                stage.setScene(tempScene);
+                stage.setTitle(title);
+                stage.show();
+
+                // Sau 3 giây, chuyển sang ResultView.fxml
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(3000); // Chờ 3 giây
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    Platform.runLater(() -> {
+                        try {
+                            FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
+                            Parent resultView = resultLoader.load();
+                            ResultViewController controller = resultLoader.getController();
+                            controller.setGameResults(gameResult, opponentGameResult, turn);
+
+                            stage.setScene(new Scene(resultView));
+                            stage.setTitle("Game Result");
+                            stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }).start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void updateGameResult(boolean success) {
