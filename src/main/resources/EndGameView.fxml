@@ -134,7 +134,6 @@
 
             <HBox alignment="CENTER" spacing="40" fx:id="containerButton">
                 <padding><Insets top="50"/></padding>
-                <Button fx:id="btnRematch" styleClass="button-primary" text="Rematch" onAction="#handleRematch" prefWidth="275" prefHeight="80"/>
                 <Button fx:id="btnMainMenu" styleClass="button-primary" text="Main Menu" onAction="#handleMainMenu" prefWidth="275" prefHeight="80"/>
             </HBox>
         </VBox>

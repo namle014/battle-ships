@@ -1,5 +1,6 @@
 package battleships;
 
+import javafx.animation.PauseTransition;
 import client.NetworkManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -69,31 +71,25 @@ public class ResultViewController extends Application {
     @FXML
     private void handleNext() {
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/EndGameView.fxml"));
             Parent endGameView = loader.load();
 
             EndGameController endGameController = loader.getController();
             endGameController.setNetwork(network);
 
+            // Gọi updateProgressBar1
             endGameController.updateProgressBar1();
 
-            if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
-                endGameController.updateProgressBar3();
-            } else if (rightPlayer != null && rightPlayer.getAccuracy() >= 35) {
-                endGameController.updateProgressBar3();
-            }
+                // Phần code còn lại chạy sau khi chờ 3 giây
+                if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
+                    endGameController.updateProgressBar3();
+                }
 
-
-            Stage stage = (Stage) nextButton.getScene().getWindow();
-
-
-            Scene currentScene = stage.getScene();
-            pushScene(currentScene);
-
-
-            stage.setScene(new Scene(endGameView));
-            stage.show();
+                Stage stage = (Stage) nextButton.getScene().getWindow();
+                Scene currentScene = stage.getScene();
+                pushScene(currentScene);
+                stage.setScene(new Scene(endGameView));
+                stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -108,7 +104,12 @@ public class ResultViewController extends Application {
         this.totalTurns = turns;
 
         turnsLabel.setText(String.valueOf(turns));
-
+        if (right == null) {
+            right = new GameResult(0, 0, 0, 0, 0, 0);
+        }
+        if (left == null) {
+            left = new GameResult(0, 0, 0, 0, 0, 0);
+        }
         updateTextFlow(shipsDestroyedLeft, left.getShipsDestroyed() + "/5");
         updateTextFlow(hitsLeft, String.valueOf(left.getHits()));
         updateTextFlow(missesLeft, String.valueOf(left.getMisses()));

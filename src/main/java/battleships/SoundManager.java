@@ -26,6 +26,20 @@ public class SoundManager {
         }
     }
 
+    public static void playSound(String filePath) {
+        try {
+            // Load file nhạc
+            Media sound = new Media(new File(filePath).toURI().toString());
+            mediaPlayer = new MediaPlayer(sound);
+
+            mediaPlayer.setVolume(1.0 * UserSession.getInstance().getSoundVolume() / 100);
+            // Chạy nhạc
+            mediaPlayer.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void setVolume(double volume) {
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(volume);

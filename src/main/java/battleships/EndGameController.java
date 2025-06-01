@@ -50,18 +50,13 @@ public class EndGameController {
     }
 
     @FXML
-    private Button btnMainMenu, btnRematch;
+    private Button btnMainMenu;
 
     @FXML
     private ProgressBar progressBar1, progressBar2, progressBar3, progressBar4;
 
     @FXML
     private Label progressLabel4, progressLabel3, progressLabel2, progressLabel1;
-
-    @FXML
-    private void handleRematch() {
-        updateProgressBar3();
-    }
 
     public void updateProgressBar3() {
         Timeline timeline = new Timeline();

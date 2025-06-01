@@ -253,7 +253,6 @@
         <HBox alignment="CENTER" spacing="45">
             <padding><Insets bottom="40"/></padding>
             <Button fx:id="btnPlaySingle" styleClass="button-primary" text="Play Single Player" onAction="#handlePlaySingle" prefWidth="360" prefHeight="110"/>
-            <Button fx:id="btnPlayOnline" styleClass="button-primary" text="Play Online" onAction="#handlePlayOnline" prefWidth="360" prefHeight="110"/>
             <Button fx:id="btnPlayWithFriends" styleClass="button-primary" text="Play with Friends" onAction="#handleStartGame" prefWidth="360" prefHeight="110"/>
         </HBox>
     </bottom>
