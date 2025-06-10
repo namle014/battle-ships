@@ -62,7 +62,7 @@ public class MainController {
 
     @FXML
     private void handlePlaySingle() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/WaitView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BoardOfflineView.fxml"));
         Parent modeView = loader.load();
 
         Stage stage = (Stage) btnPlaySingle.getScene().getWindow();
