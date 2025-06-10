@@ -51,7 +51,7 @@ public class MainController {
         containerProgress1.setMaxWidth(Region.USE_PREF_SIZE);
         containerProgress1.setMaxHeight(Region.USE_PREF_SIZE);
         btnSettings.setGraphic(settingsIcon); // Thêm icon vào button
-        SoundManager.playBackgroundMusic("src/main/resources/sounds/battle-ship-short.mp3");
+        SoundManager.getInstance().playBackgroundMusic("src/main/resources/sounds/battle-ship-short.mp3");
         updateInfoPersonal();
         updateDailyQuests();
 

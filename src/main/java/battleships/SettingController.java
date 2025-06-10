@@ -129,12 +129,12 @@ public class SettingController {
     @FXML
     public void handleVolumeChange() {
         double volume = sliderMusic.getValue() / 100.0; // Chuyển về giá trị (0.0 - 1.0)
-        SoundManager.setVolume(volume);
+        SoundManager.getInstance().setVolume(volume);
     }
 
     @FXML
     private void handleLogout() throws IOException {
-        SoundManager.pauseMusic();
+        SoundManager.getInstance().pauseMusic();
         UserSession.logout();
         DailyQuestsSession.logout();
 

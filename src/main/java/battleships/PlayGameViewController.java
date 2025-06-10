@@ -259,7 +259,7 @@
 
         private void attack(int col, int row, Rectangle cell) {
             turn += 1;
-            SoundManager.playSound("src/main/resources/sounds/sound.mp3");
+            SoundManager.getInstance().playSound("src/main/resources/sounds/sound.mp3");
             boolean success = false;
             boolean shipsunk = false;
 

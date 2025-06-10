@@ -11,11 +11,13 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class ServerApp {
+    private static ServerApp instance; // ✅ Singleton instance
+
     private Server server;
     private HashMap<String, RoomInfo> rooms = new HashMap<>();
     private HashMap<Connection, PlayerInfo> players = new HashMap<>();
 
-    public ServerApp() throws IOException {
+    private ServerApp() throws IOException {
         server = new Server();
         registerClasses();
 
@@ -58,6 +60,14 @@ public class ServerApp {
                 }
             }
         });
+    }
+
+    // ✅ Phương thức getInstance để truy cập Singleton
+    public static ServerApp getInstance() throws IOException {
+        if (instance == null) {
+            instance = new ServerApp();
+        }
+        return instance;
     }
 
     private void registerClasses() {
@@ -244,7 +254,7 @@ public class ServerApp {
     }
 
     public static void main(String[] args) throws IOException {
-        new ServerApp();
+        ServerApp.getInstance(); // ✅ Sử dụng Singleton
         System.out.println("Server started.");
     }
 }
