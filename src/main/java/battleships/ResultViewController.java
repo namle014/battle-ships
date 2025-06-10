@@ -77,19 +77,22 @@ public class ResultViewController extends Application {
             EndGameController endGameController = loader.getController();
             endGameController.setNetwork(network);
 
-            // Gọi updateProgressBar1
+
             endGameController.updateProgressBar1();
 
-                // Phần code còn lại chạy sau khi chờ 3 giây
-                if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
-                    endGameController.updateProgressBar3();
-                }
+            if (leftPlayer != null && leftPlayer.isFirstHit()) {
+                endGameController.updateProgressBar2();
+            }
 
-                Stage stage = (Stage) nextButton.getScene().getWindow();
-                Scene currentScene = stage.getScene();
-                pushScene(currentScene);
-                stage.setScene(new Scene(endGameView));
-                stage.show();
+            if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
+                endGameController.updateProgressBar3();
+            }
+
+            Stage stage = (Stage) nextButton.getScene().getWindow();
+            Scene currentScene = stage.getScene();
+            pushScene(currentScene);
+            stage.setScene(new Scene(endGameView));
+            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
