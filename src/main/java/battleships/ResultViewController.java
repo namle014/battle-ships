@@ -112,7 +112,6 @@ public class ResultViewController extends Application {
 
         playerNameLabel.setText(left.getPlayerName());
         opponentNameLabel.setText(right.getPlayerName());
-        System.out.println(left.getPlayerName() + " " + right.getPlayerName());
 
         turnsLabel.setText(String.valueOf(turns));
         if (right == null) {

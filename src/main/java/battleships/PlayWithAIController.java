@@ -152,7 +152,6 @@ public class PlayWithAIController extends Application {
     }
 
     private void attack(int col, int row, Rectangle cell) {
-        endGame(true);
         turn++;
         SoundManager.getInstance().playSound("src/main/resources/sounds/sound.mp3");
         boolean success = false;
