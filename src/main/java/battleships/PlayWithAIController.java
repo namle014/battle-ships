@@ -1,5 +1,6 @@
 package battleships;
 
+import common.UserSession;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -33,7 +34,8 @@ public class PlayWithAIController extends Application {
     private List<int[]> availableTargets = new ArrayList<>();
     private boolean isPlayerTurn = true;
 
-    private GameResult gameResult;
+    private GameResult playerResult;
+    private GameResult AIResult;
     private int turn = 0;
     private int streak = 0;
 
@@ -58,10 +60,10 @@ public class PlayWithAIController extends Application {
         playerBoardContainer = (VBox) boardGridPlayer.getParent();
         opponentBoardContainer = (VBox) boardGridOpponent.getParent();
 
-        gameResult = new GameResult(0, 0, 0, 0, 0, 0);
-
-        opponentShips = ShipFactory.generateRandomShips();
-        playerShips = ShipFactory.generateRandomShips();
+        playerResult = new GameResult(0, 0, 0, 0, 0, 0);
+        playerResult.setPlayerName(UserSession.getInstance().getUsername());
+        AIResult = new GameResult(0, 0, 0, 0, 0, 0);
+        AIResult.setPlayerName("Computer");
 
         // Tạo danh sách ô để AI bắn
         for (int row = 1; row <= 10; row++) {
@@ -71,17 +73,16 @@ public class PlayWithAIController extends Application {
         }
 
         playerName.setText("You");
-        drawShips(boardGridPlayer, playerShips, Color.web("#90A4AE"));
-        updateTurnUI();
     }
 
     public void setPlayerTurn(boolean turn) {
         this.isPlayerTurn = turn;
     }
 
-    public void setPlayerShips(List<Ship> playerShips, List<Ship> opponentShips) {
+    public void setPlayerShips(List<Ship> playerShips) {
         this.playerShips = playerShips;
-        this.opponentShips = opponentShips;
+        ShipFactory shipFactory = new ShipFactory();
+        this.opponentShips = shipFactory.getRandomShips();
         drawShips(boardGridPlayer, playerShips, Color.web("#0066CC"));
         updateTurnUI();
     }
@@ -138,7 +139,7 @@ public class PlayWithAIController extends Application {
         for (Ship ship : ships) {
             for (int i = 0; i < ship.getSize(); i++) {
                 Rectangle rect = new Rectangle(30, 30);
-                rect.setFill(shipColor);
+                rect.setFill(Color.web("#90A4AE")); // Xám xanh đậm
                 rect.setStroke(Color.web("#388E3C"));
 
                 if (ship.isHorizontal()) {
@@ -151,6 +152,7 @@ public class PlayWithAIController extends Application {
     }
 
     private void attack(int col, int row, Rectangle cell) {
+        endGame(true);
         turn++;
         SoundManager.playSound("src/main/resources/sounds/sound.mp3");
         boolean success = false;
@@ -167,9 +169,10 @@ public class PlayWithAIController extends Application {
 
         cell.setFill(success ? Color.web("#81C784") : Color.web("#FF5252"));
         cell.setOnMouseClicked(null);
+        updateGameResult(success, playerResult);
+        if (sunk && playerResult.getHits() != 17) handleShipSunk();
 
-        updateGameResult(success);
-        if (gameResult.getHits() == 17) {
+        if (playerResult.getHits() == 17) {
             endGame(true);
             return;
         }
@@ -205,12 +208,28 @@ public class PlayWithAIController extends Application {
             }
         }
 
+        updateGameResult(success, AIResult);
+        if (sunk && countHits(playerShips) != 17) handleShipSunk();
+
         final boolean finalSuccess = success;
 
         Platform.runLater(() -> {
             Rectangle rect = getRectangleAt(boardGridPlayer, col, row);
-            if (rect != null) {
-                rect.setFill(finalSuccess ? Color.web("#FFF176") : Color.web("#FF5252"));
+
+            if (!finalSuccess) {
+                if (rect != null) rect.setFill(Color.web("#FF5252"));
+            } else {
+                if (rect != null) {
+                    boardGridPlayer.getChildren().remove(rect);
+                }
+
+                Rectangle newRect = new Rectangle(30, 30);
+                newRect.setFill(Color.web("#FFF176"));
+                newRect.setStroke(Color.web("#388E3C"));
+                newRect.setArcWidth(4);
+                newRect.setArcHeight(4);
+
+                boardGridPlayer.add(newRect, col, row);
             }
 
             if (countHits(playerShips) == 17) {
@@ -250,9 +269,12 @@ public class PlayWithAIController extends Application {
         opponentLabel.setText(isPlayerTurn ? "🎯 YOUR TURN - ATTACK!" : "🏴‍☠️ ENEMY ATTACKING");
     }
 
-    private void updateGameResult(boolean success) {
+    private void updateGameResult(boolean success, GameResult gameResult) {
         int sunk = (int) opponentShips.stream().filter(ship -> ship.getAttackCount() == ship.getSize()).count();
-        gameResult.setShipsDestroyed(sunk);
+        int playerSunk = (int) playerShips.stream().filter(ship -> ship.getAttackCount() == ship.getSize()).count();
+
+        if (gameResult.equals(playerResult)) gameResult.setShipsDestroyed(sunk);
+        else gameResult.setShipsDestroyed(playerSunk);
         if (success) {
             gameResult.setHits(gameResult.getHits() + 1);
             streak++;
@@ -274,12 +296,69 @@ public class PlayWithAIController extends Application {
 
     private void endGame(boolean win) {
         Platform.runLater(() -> {
+            Stage stage = (Stage) playerName.getScene().getWindow();
+
+            String fxmlPath = win ? "/WinView.fxml" : "/LoseView.fxml";
+
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(win ? "/WinView.fxml" : "/LoseView.fxml"));
-                Parent view = loader.load();
-                Stage stage = (Stage) playerLabel.getScene().getWindow();
-                stage.setScene(new Scene(view));
+                //scene 1
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                Parent tempView = loader.load();
+                Scene tempScene = new Scene(tempView);
+
+                //scene 2
+                FXMLLoader resultLoader = new FXMLLoader(getClass().getResource("/ResultView.fxml"));
+                Parent resultView = resultLoader.load();
+                ResultViewController controller = resultLoader.getController();
+                controller.setGameResults(playerResult, AIResult, turn);
+
+                stage.setScene(tempScene);
+                stage.setTitle("Game Result");
                 stage.show();
+
+                // Sau 3 giây, chuyển sang ResultView.fxml
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(3000); // Chờ 3 giây
+                        Platform.runLater(() -> {
+                            stage.setScene(new Scene(resultView));
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void handleShipSunk() {
+        Platform.runLater(() -> {
+            Stage stage = (Stage) playerName.getScene().getWindow();
+
+            Main.pushScene(playerName.getScene());
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ShipSunkView.fxml"));
+                Parent shipSunkView = loader.load();
+                Scene ssScene = new Scene(shipSunkView);
+
+                stage.setScene(ssScene);
+                stage.show();
+
+                // Sau 3 giây, chuyển sang ResultView.fxml
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(3000); // Chờ 3 giây
+                        Platform.runLater(() -> {
+                            stage.setScene(Main.popScene());
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -288,14 +367,50 @@ public class PlayWithAIController extends Application {
 }
 
 class ShipFactory {
-    public static List<Ship> generateRandomShips() {
-        // Tạo list tàu theo kiểu chơi Battleship
-        List<Ship> ships = new ArrayList<>();
-        ships.add(new Ship(2, 1, 1, true));
-        ships.add(new Ship(3, 3, 2, false));
-        ships.add(new Ship(3, 5, 5, true));
-        ships.add(new Ship(4, 8, 3, false));
-        ships.add(new Ship(5, 1, 7, true));
-        return ships;
+    public Random random = new Random();
+    private List<Ship> ships = new ArrayList<>();
+
+    public List<Ship> getRandomShips() {
+        placeShipsRandomly();
+        return this.ships;
+    }
+
+    private void placeShipsRandomly() {
+        int[] sizes = {5, 4, 3, 3, 2};
+        for (int size : sizes) {
+            boolean placed = false;
+            while (!placed) {
+                int x = random.nextInt(10) + 1;
+                int y = random.nextInt(10) + 1;
+                boolean horizontal = random.nextBoolean();
+                if (canPlaceShip(x, y, size, horizontal, null)) {
+                    Ship ship = new Ship(x, y, size, horizontal);
+                    ships.add(ship);
+                    placed = true;
+                }
+            }
+        }
+    }
+
+    private boolean canPlaceShip(int x, int y, int size, boolean horizontal, Ship ignore) {
+        if (horizontal) {
+            if (x + size > 11) return false;
+            for (int i = 0; i < size; i++) {
+                if (isOccupied(x + i, y, ignore)) return false;
+            }
+        } else {
+            if (y + size > 11) return false;
+            for (int i = 0; i < size; i++) {
+                if (isOccupied(x, y + i, ignore)) return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isOccupied(int x, int y, Ship ignore) {
+        for (Ship ship : ships) {
+            if (ship != ignore && ship.isOccupied(x, y)) return true;
+        }
+        return false;
     }
 }

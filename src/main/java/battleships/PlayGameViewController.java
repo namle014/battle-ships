@@ -2,6 +2,7 @@
 
     import client.NetworkManager;
     import common.Network;
+    import common.UserSession;
     import javafx.application.Application;
     import javafx.application.Platform;
     import javafx.fxml.FXML;
@@ -116,6 +117,7 @@
                 sendButton.setOnAction(event -> sendMessage());
             }
             gameResult = new GameResult(0, 0, 0, 0, 0, 0);
+            gameResult.setPlayerName(UserSession.getInstance().getUsername());
             streak = 0;
             turn = 0;
         }

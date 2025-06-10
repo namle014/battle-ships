@@ -132,11 +132,33 @@ public class BoardOfflineController extends Application {
     }
 
     private void addShipToGrid(Ship ship) {
-        Image img = new Image(getClass().getResourceAsStream("/images/icon_ship.png"));
-        ImagePattern pattern = new ImagePattern(img);
+        Image defaultShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship.png"));
+        Image greenShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_green.png"));
+        Image redShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_red.png"));
+        Image blueShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_blue.png"));
+        Image orangeShipImage = new Image(getClass().getResourceAsStream("/images/icon_ship_orange.png"));
+
+        // Chọn ảnh phù hợp theo kích thước tàu
+        ImagePattern shipPattern;
+        switch (ship.getSize()) {
+            case 5:
+                shipPattern = new ImagePattern(greenShipImage);
+                break;
+            case 4:
+                shipPattern = new ImagePattern(redShipImage);
+                break;
+            case 3:
+                shipPattern = new ImagePattern(blueShipImage);
+                break;
+            case 2:
+                shipPattern = new ImagePattern(orangeShipImage);
+                break;
+            default:
+                shipPattern = new ImagePattern(defaultShipImage);
+        }
         for (int i = 0; i < ship.getSize(); i++) {
             Rectangle rect = new Rectangle(45, 45);
-            rect.setFill(pattern);
+            rect.setFill(shipPattern);
             rect.setStroke(Color.BLACK);
 
             int col = ship.isHorizontal() ? ship.getStartX() + i : ship.getStartX();
@@ -243,7 +265,7 @@ public class BoardOfflineController extends Application {
             PlayWithAIController controller = loader.getController();
 
             controller.setPlayerTurn(true);
-            controller.setPlayerShips(ships, ShipFactory.generateRandomShips());
+            controller.setPlayerShips(ships);
 
             Stage stage = (Stage) readyButton.getScene().getWindow();
             stage.setScene(new Scene(playView));

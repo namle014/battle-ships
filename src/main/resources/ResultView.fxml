@@ -26,11 +26,11 @@
 
                     <Label text="Number of turns" GridPane.columnIndex="1" GridPane.rowIndex="0"
                            style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                    <Label text="Euryleia" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                    <Label fx:id="playerNameLabel" text="Euryleia" GridPane.columnIndex="0" GridPane.rowIndex="1"
                            style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
                     <Label fx:id="turnsLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"
                            style="-fx-font-size: 32px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
-                    <Label text="William Karslake" GridPane.columnIndex="2" GridPane.rowIndex="1"
+                    <Label fx:id="opponentNameLabel" text="William Karslake" GridPane.columnIndex="2" GridPane.rowIndex="1"
                            style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
                 </GridPane>
             </HBox>

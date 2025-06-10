@@ -271,7 +271,7 @@ public class EndGameController {
 
     @FXML
     private void handleMainMenu() throws IOException {
-        network.leaveRoom();
+        if (network != null) network.leaveRoom();
         UserSession session = UserSession.getInstance();
         DatabaseHelper.updateSession(session.getUsername());
         LoginController.getPlayerDailyQuests(session.getUserId());

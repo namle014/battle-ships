@@ -35,6 +35,10 @@ public class ResultViewController extends Application {
     private TextFlow shipsDestroyedRight, hitsRight, missesRight, accuracyRight, streakRight, scoreRight;
     @FXML
     private Button nextButton;
+    @FXML
+    private Label playerNameLabel;
+    @FXML
+    private Label opponentNameLabel;
 
 
     private GameResult leftPlayer;
@@ -105,6 +109,10 @@ public class ResultViewController extends Application {
         this.leftPlayer = left;
         this.rightPlayer = right;
         this.totalTurns = turns;
+
+        playerNameLabel.setText(left.getPlayerName());
+        opponentNameLabel.setText(right.getPlayerName());
+        System.out.println(left.getPlayerName() + " " + right.getPlayerName());
 
         turnsLabel.setText(String.valueOf(turns));
         if (right == null) {

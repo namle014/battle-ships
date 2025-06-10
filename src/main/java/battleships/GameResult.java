@@ -8,6 +8,7 @@ public class GameResult {
     private int bestStreak;
     private int score;
     private boolean firstHit;
+    private String playerName;
 
     public GameResult(int shipsDestroyed, int hits, int misses, int accuracy, int bestStreak,int score) {
         this.shipsDestroyed = shipsDestroyed;
@@ -27,6 +28,7 @@ public class GameResult {
     public int getBestStreak() { return bestStreak; }
     public int getScore() { return score; }
     public boolean isFirstHit() { return firstHit; }
+    public String getPlayerName() { return playerName; }
 
     public void setShipsDestroyed(int shipsDestroyed) {
         this.shipsDestroyed = shipsDestroyed;
@@ -50,4 +52,5 @@ public class GameResult {
     public void setFirstHit(boolean firstHit) {
         this.firstHit = firstHit;
     }
+    public void setPlayerName(String playerName) {this.playerName = playerName;}
 }
