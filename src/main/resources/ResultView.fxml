@@ -13,142 +13,137 @@
     </top>
 
     <center>
-        <VBox>
-            <padding><Insets top="100"/></padding>
-            <HBox style="-fx-background-color: rgba(10, 10, 10, 0.6); -fx-padding: 10px; -fx-alignment: center;">
-                <GridPane style="-fx-hgap: 50px; -fx-vgap: 10px; -fx-alignment: center;">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
-                        <ColumnConstraints percentWidth="40" halignment="CENTER"/> <!-- Tăng cột giữa -->
-                        <ColumnConstraints percentWidth="30" halignment="LEFT"/>
-                    </columnConstraints>
+        <VBox spacing="10">
+            <padding><Insets top="40"/></padding>
 
-
-                    <Label text="Number of turns" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                    <Label fx:id="playerNameLabel" text="Euryleia" GridPane.columnIndex="0" GridPane.rowIndex="1"
-                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                    <Label fx:id="turnsLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"
-                           style="-fx-font-size: 32px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
-                    <Label fx:id="opponentNameLabel" text="William Karslake" GridPane.columnIndex="2" GridPane.rowIndex="1"
-                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                </GridPane>
+            <!-- Header Section with Turn Count -->
+            <HBox style="-fx-background-color: rgba(10, 10, 10, 0.7); -fx-padding: 10px; -fx-alignment: center;">
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Number of turns"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label fx:id="turnsLabel"
+                           style="-fx-font-size: 36px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
+                </VBox>
             </HBox>
 
-            <HBox style="-fx-background-color: rgba(50, 50, 50, 0.6); -fx-padding: 10px; -fx-alignment: center;">
-                <GridPane style="-fx-padding: 20px; -fx-hgap: 50px; -fx-vgap: 10px; -fx-alignment: center;">
-                    <!-- Tiêu đề -->
-                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="2"
-                              style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Ships destroyed"
-                              style="-fx-font-size: 22px; -fx-font-weight: bold;
-                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="3"
-                              style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Hits"
-                              style="-fx-font-size: 22px; -fx-font-weight: bold;
-                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="4"
-                              style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Misses"
-                              style="-fx-font-size: 22px; -fx-font-weight: bold;
-                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="5"
-                              style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Accuracy"
-                              style="-fx-font-size: 22px; -fx-font-weight: bold;
-                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="6"
-                              style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Best Hit streak"
-                              style="-fx-font-size: 22px; -fx-font-weight: bold;
-                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="9"
-                              style="-fx-text-alignment: center; -fx-alignment: center;">
-                        <Text text="Score"
-                              style="-fx-font-size: 30px; -fx-font-weight: bold;
-                     -fx-fill: white; -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
+            <!-- Player Names Section -->
+            <HBox style="-fx-background-color: rgba(30, 30, 30, 0.7); -fx-padding: 10px; -fx-alignment: center;">
+                <HBox alignment="CENTER" spacing="200" HBox.hgrow="ALWAYS">
+                    <Label fx:id="playerNameLabel"
+                           style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #03A9F4;"/>
+                    <Label text="VS"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label fx:id="opponentNameLabel"
+                           style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #FF5722;"/>
+                </HBox>
+            </HBox>
 
-                    <!-- Thống kê người chơi bên trái -->
-                    <TextFlow fx:id="shipsDestroyedLeft" GridPane.columnIndex="0" GridPane.rowIndex="2"
-                              style="-fx-text-alignment: center; -fx-alignment: right;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="hitsLeft" GridPane.columnIndex="0" GridPane.rowIndex="3"
-                              style="-fx-text-alignment: center; -fx-alignment: right;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="missesLeft" GridPane.columnIndex="0" GridPane.rowIndex="4"
-                              style="-fx-text-alignment: center; -fx-alignment: right;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="accuracyLeft" GridPane.columnIndex="0" GridPane.rowIndex="5"
-                              style="-fx-text-alignment: center; -fx-alignment: right;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="streakLeft" GridPane.columnIndex="0" GridPane.rowIndex="6"
-                              style="-fx-text-alignment: center; -fx-alignment: right;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="scoreLeft" GridPane.columnIndex="0" GridPane.rowIndex="9"
-                              style="-fx-text-alignment: center; -fx-alignment: right;">
-                        <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
+            <!-- Statistics Section -->
+            <HBox style="-fx-pref-width: 80%; -fx-background-color: rgba(50, 50, 50, 0.7); -fx-padding: 30px; -fx-alignment: center;">
+                <VBox spacing="15" alignment="CENTER">
 
-                    <!-- Thống kê người chơi bên phải -->
-                    <TextFlow fx:id="shipsDestroyedRight" GridPane.columnIndex="2" GridPane.rowIndex="2"
-                              style="-fx-text-alignment: center; -fx-alignment: left;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="hitsRight" GridPane.columnIndex="2" GridPane.rowIndex="3"
-                              style="-fx-text-alignment: center; -fx-alignment: left;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="missesRight" GridPane.columnIndex="2" GridPane.rowIndex="4"
-                              style="-fx-text-alignment: center; -fx-alignment: left;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="accuracyRight" GridPane.columnIndex="2" GridPane.rowIndex="5"
-                              style="-fx-text-alignment: center; -fx-alignment: left;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="streakRight" GridPane.columnIndex="2" GridPane.rowIndex="6"
-                              style="-fx-text-alignment: center; -fx-alignment: left;">
-                        <Text style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                    <TextFlow fx:id="scoreRight" GridPane.columnIndex="2" GridPane.rowIndex="9"
-                              style="-fx-text-alignment: center; -fx-alignment: left;">
-                        <Text style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-fill: white;
-                     -fx-stroke: black; -fx-stroke-width: 1px;"/>
-                    </TextFlow>
-                </GridPane>
+                    <!-- Ships Destroyed Row -->
+                    <HBox spacing="100" alignment="CENTER">
+                        <TextFlow fx:id="shipsDestroyedLeft" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #03A9F4;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                        <Label text="Ships destroyed"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;
+                                      -fx-min-width: 200px; -fx-alignment: center;"/>
+                        <TextFlow fx:id="shipsDestroyedRight" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #FF5722;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                    </HBox>
 
+                    <!-- Hits Row -->
+                    <HBox spacing="100" alignment="CENTER">
+                        <TextFlow fx:id="hitsLeft" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #03A9F4;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                        <Label text="Hits"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;
+                                      -fx-min-width: 200px; -fx-alignment: center;"/>
+                        <TextFlow fx:id="hitsRight" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #FF5722;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                    </HBox>
 
+                    <!-- Misses Row -->
+                    <HBox spacing="100" alignment="CENTER">
+                        <TextFlow fx:id="missesLeft" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #03A9F4;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                        <Label text="Misses"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;
+                                      -fx-min-width: 200px; -fx-alignment: center;"/>
+                        <TextFlow fx:id="missesRight" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #FF5722;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                    </HBox>
+
+                    <!-- Accuracy Row -->
+                    <HBox spacing="100" alignment="CENTER">
+                        <TextFlow fx:id="accuracyLeft" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #03A9F4;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                        <Label text="Accuracy"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;
+                                      -fx-min-width: 200px; -fx-alignment: center;"/>
+                        <TextFlow fx:id="accuracyRight" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #FF5722;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                    </HBox>
+
+                    <!-- Best Hit Streak Row -->
+                    <HBox spacing="100" alignment="CENTER">
+                        <TextFlow fx:id="streakLeft" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #03A9F4;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                        <Label text="Best hit streak"
+                               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;
+                                      -fx-min-width: 200px; -fx-alignment: center;"/>
+                        <TextFlow fx:id="streakRight" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #FF5722;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                    </HBox>
+
+                    <!-- Separator -->
+                    <Region style="-fx-background-color: rgba(255,255,255,0.3); -fx-pref-height: 2px; -fx-max-height: 2px;"
+                            prefWidth="600"/>
+
+                    <!-- Score Row (Highlighted) -->
+                    <HBox spacing="100" alignment="CENTER" >
+                        <TextFlow fx:id="scoreLeft" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-fill: #03A9F4;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                        <Label text="SCORE"
+                               style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #FFCC00;
+                                      -fx-min-width: 200px; -fx-alignment: center;"/>
+                        <TextFlow fx:id="scoreRight" style="-fx-text-alignment: center;">
+                            <Text style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-fill: #FF5722;
+                                 -fx-stroke: black; -fx-stroke-width: 1px;"/>
+                        </TextFlow>
+                    </HBox>
+
+                </VBox>
             </HBox>
         </VBox>
     </center>
 
-
     <bottom>
         <HBox alignment="BOTTOM_CENTER" spacing="10">
-            <padding><Insets bottom="40" left="15" right="15"/></padding>
+            <padding><Insets bottom="40" top="10" left="15" right="15"/></padding>
             <Button fx:id="nextButton" styleClass="button-primary" text="Next"
                     onAction="#handleNext" prefWidth="360" prefHeight="50"/>
         </HBox>
