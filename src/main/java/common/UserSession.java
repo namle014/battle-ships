@@ -40,7 +40,7 @@ public class UserSession {
     public static void login(String userId, String username, int level, int totalPlays, int totalWins,
                              int totalShots, int totalHits, int musicVolume, int soundVolume, String password,
                              int currentProgressLevel) {
-        instance = new UserSession(userId, username, level, totalPlays, totalWins, totalShots, totalHits,
+        instance = new UserSession(userId, username, level, totalPlays, totalWins, totalHits, totalShots,
                         musicVolume, soundVolume, password,  currentProgressLevel);
     }
 

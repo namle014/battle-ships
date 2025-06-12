@@ -14,7 +14,7 @@
 
     <center>
         <VBox spacing="10">
-            <padding><Insets top="40"/></padding>
+            <padding><Insets top="45"/></padding>
 
             <!-- Header Section with Turn Count -->
             <HBox style="-fx-background-color: rgba(10, 10, 10, 0.7); -fx-padding: 10px; -fx-alignment: center;">
@@ -141,11 +141,12 @@
         </VBox>
     </center>
 
+
     <bottom>
         <HBox alignment="BOTTOM_CENTER" spacing="10">
-            <padding><Insets bottom="40" top="10" left="15" right="15"/></padding>
+            <padding><Insets bottom="45" left="15" right="15"/></padding>
             <Button fx:id="nextButton" styleClass="button-primary" text="Next"
-                    onAction="#handleNext" prefWidth="360" prefHeight="50"/>
+                    onAction="#handleNext" prefWidth="275" prefHeight="80"/>
         </HBox>
     </bottom>
 

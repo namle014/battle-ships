@@ -40,7 +40,7 @@
             <HBox spacing="15" alignment="CENTER">
                 <!-- Bảng của người chơi -->
                 <VBox alignment="TOP_CENTER" spacing="10" prefWidth="300" maxWidth="350">
-                    <Label fx:id="playerLabel"
+                    <Label fx:id="opponentLabel"
                            prefWidth="300.0"
                            style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #2E7D32; -fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; -fx-border-color: #4CAF50; -fx-border-width: 2px; -fx-border-radius: 8px;"
                            text="🛡️ YOUR FLEET" />
@@ -53,7 +53,7 @@
 
                 <!-- Bảng đối phương -->
                 <VBox alignment="TOP_CENTER" spacing="10" prefWidth="300" maxWidth="350">
-                    <Label fx:id="opponentLabel"
+                    <Label fx:id="playerLabel"
                            prefWidth="300.0"
                            style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #BF360C; -fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; -fx-border-color: #FF5722; -fx-border-width: 2px; -fx-border-radius: 8px;"
                            text="🏴‍☠️ ENEMY'S FLEET" />

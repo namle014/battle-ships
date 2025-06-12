@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static battleships.Main.popScene;
 import static battleships.Main.pushScene;
 
 public class BoardViewController extends Application {
@@ -39,7 +41,7 @@ public class BoardViewController extends Application {
     @FXML
     private GridPane boardGrid;
     @FXML
-    private Button readyButton;
+    private Button readyButton, btnSettings;
 
     private List<Ship> ships = new ArrayList<>();
     private Random random = new Random();
@@ -61,11 +63,25 @@ public class BoardViewController extends Application {
         primaryStage.show();
     }
 
+    @FXML
+    private void handleBack() {
+        Scene previousScene = popScene();
+        if (previousScene != null) {
+            Stage stage = (Stage) readyButton.getScene().getWindow();
+            stage.setScene(previousScene);
+        }
+    }
+
     public void initialize() {
         ships.clear();
         boardGrid.getChildren().clear();
         boardGrid.getColumnConstraints().clear();
         boardGrid.getRowConstraints().clear();
+
+        ImageView settingsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/setting.png")));
+        settingsIcon.setFitWidth(57); // Kích thước icon
+        settingsIcon.setFitHeight(57);
+        btnSettings.setGraphic(settingsIcon);
 
         ColumnConstraints column1 = new ColumnConstraints();
         column1.setPrefWidth(45);
@@ -132,6 +148,21 @@ public class BoardViewController extends Application {
         for (int size : shipSizes) {
             placeShip(size);
         }
+    }
+
+    @FXML
+    private void handleSetting()  throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/SettingView.fxml"));
+        Parent modeView = loader.load();
+
+        Stage stage = (Stage) readyButton.getScene().getWindow();
+
+        Scene currentScene = stage.getScene();
+        pushScene(currentScene);
+
+        stage.setScene(new Scene(modeView));
+
+        stage.show();
     }
 
     private void placeShip(int size) {

@@ -3,6 +3,7 @@ package battleships;
 import javafx.animation.PauseTransition;
 import client.NetworkManager;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,7 +40,6 @@ public class ResultViewController extends Application {
     private Label playerNameLabel;
     @FXML
     private Label opponentNameLabel;
-
 
     private GameResult leftPlayer;
     private GameResult rightPlayer;
@@ -81,28 +81,58 @@ public class ResultViewController extends Application {
             EndGameController endGameController = loader.getController();
             endGameController.setNetwork(network);
 
-
-            endGameController.updateProgressBar1();
-
-            if (leftPlayer != null && leftPlayer.isFirstHit()) {
-                endGameController.updateProgressBar2();
-            }
-
-            if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
-                endGameController.updateProgressBar3();
-            }
-
             Stage stage = (Stage) nextButton.getScene().getWindow();
             Scene currentScene = stage.getScene();
             pushScene(currentScene);
             stage.setScene(new Scene(endGameView));
             stage.show();
 
+            Platform.runLater(() -> {
+                if (leftPlayer != null) {
+                    boolean isWin = leftPlayer.getShipsDestroyed() == 5;
+                    endGameController.winInfo(isWin, leftPlayer.getHits(), leftPlayer.getHits() + leftPlayer.getMisses());
+                }
+
+                PauseTransition pause1 = new PauseTransition(Duration.seconds(0.3));
+                pause1.setOnFinished(event1 -> {
+                    endGameController.updateProgressBar1();
+
+                    // Kiểm tra điều kiện chạy progressBar2
+                    if (leftPlayer != null && leftPlayer.isFirstHit()) {
+                        PauseTransition pause2 = new PauseTransition(Duration.seconds(1));
+                        pause2.setOnFinished(event2 -> {
+                            endGameController.updateProgressBar2();
+
+                            // Sau progressBar2 → đến progressBar3 (nếu cần)
+                            if (leftPlayer.getAccuracy() >= 35) {
+                                PauseTransition pause3 = new PauseTransition(Duration.seconds(1));
+                                pause3.setOnFinished(event3 -> {
+                                    endGameController.updateProgressBar3();
+                                });
+                                pause3.play();
+                            }
+                        });
+                        pause2.play();
+                    } else {
+                        // Nếu bỏ qua progressBar2 → xét luôn progressBar3
+                        if (leftPlayer != null && leftPlayer.getAccuracy() >= 35) {
+                            PauseTransition pause3 = new PauseTransition(Duration.seconds(1));
+                            pause3.setOnFinished(event3 -> {
+                                endGameController.updateProgressBar3();
+                            });
+                            pause3.play();
+                        }
+                    }
+                });
+                pause1.play();
+            });
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error loading EndGame view: " + e.getMessage());
         }
     }
+
+
 
     public void setGameResults(GameResult left, GameResult right, int turns) {
 

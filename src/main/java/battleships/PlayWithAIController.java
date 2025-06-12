@@ -16,7 +16,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
+
+import static battleships.Main.popScene;
 
 public class PlayWithAIController extends Application {
 
@@ -25,6 +30,11 @@ public class PlayWithAIController extends Application {
     @FXML private Label playerLabel;
     @FXML private Label opponentLabel;
     @FXML private Label playerName;
+    @FXML
+    private StackPane dialogContainer;
+
+    private boolean aiPaused = false;
+    private int[][] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 
     private VBox playerBoardContainer;
     private VBox opponentBoardContainer;
@@ -33,6 +43,7 @@ public class PlayWithAIController extends Application {
     private List<Ship> opponentShips;
     private List<int[]> availableTargets = new ArrayList<>();
     private boolean isPlayerTurn = true;
+    private Set<String> visited = new HashSet<>();
 
     private GameResult playerResult;
     private GameResult AIResult;
@@ -50,6 +61,59 @@ public class PlayWithAIController extends Application {
         primaryStage.setTitle("Battle Ships (vs AI)");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    @FXML
+    private void onCancelClicked() {
+        dialogContainer.setVisible(false);
+        dialogContainer.setManaged(false);
+    }
+
+    public void exitGame() {
+        int total = UserSession.getInstance().getTotalPlays() + 1;
+        int hits = UserSession.getInstance().getTotalHits() + playerResult.getHits();
+        int shots = UserSession.getInstance().getTotalShots() + playerResult.getHits() + playerResult.getMisses();
+
+        String sql = "UPDATE players SET total_plays = ?, total_hits = ?, total_shots = ?" +
+                " WHERE id = CAST(? AS UUID)";
+
+        try (Connection conn = database.DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, total);
+            stmt.setInt(2, hits);
+            stmt.setInt(3, shots);
+            stmt.setObject(4, UUID.fromString(UserSession.getInstance().getUserId()));
+
+            stmt.executeUpdate();
+
+            System.out.println("Successfully end game");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onAgreeClicked() throws IOException {
+        exitGame();
+        Scene previousScene = popScene();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+        Parent modeView = loader.load();
+
+        // Gọi lại update khi cửa sổ mở lại
+        MainController controller = loader.getController();
+        controller.updateInfoPersonal();
+        controller.updateDailyQuests();
+
+        if (previousScene != null) {
+            Stage stage = (Stage) playerName.getScene().getWindow();
+            stage.setScene(previousScene);
+        }
+    }
+    @FXML
+    private void handleBack() throws IOException {
+        dialogContainer.setVisible(true);
+        dialogContainer.setManaged(true);
     }
 
     @FXML
@@ -72,6 +136,8 @@ public class PlayWithAIController extends Application {
             }
         }
 
+        dialogContainer.setVisible(false);
+        dialogContainer.setManaged(false);
         playerName.setText("You");
     }
 
@@ -92,44 +158,87 @@ public class PlayWithAIController extends Application {
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
 
-        ColumnConstraints labelCol = new ColumnConstraints();
-        labelCol.setPrefWidth(30);
-        grid.getColumnConstraints().add(labelCol);
+        // Tạo constraints với kích thước nhỏ hơn
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPrefWidth(30);
+        grid.getColumnConstraints().add(column1);
 
         for (int i = 0; i < 10; i++) {
-            ColumnConstraints col = new ColumnConstraints(30);
-            grid.getColumnConstraints().add(col);
+            ColumnConstraints column = new ColumnConstraints();
+            column.setPrefWidth(30);
+            grid.getColumnConstraints().add(column);
+
             Label colLabel = new Label(String.valueOf(i + 1));
+            colLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #2c3e50; -fx-background-color: #E3F2FD; -fx-background-radius: 4px; -fx-padding: 4px;");
             colLabel.setMinSize(30, 30);
             colLabel.setAlignment(Pos.CENTER);
+            GridPane.setHalignment(colLabel, javafx.geometry.HPos.CENTER);
             grid.add(colLabel, i + 1, 0);
         }
 
-        RowConstraints labelRow = new RowConstraints(30);
-        grid.getRowConstraints().add(labelRow);
+        RowConstraints row1 = new RowConstraints();
+        row1.setPrefHeight(30);
+        grid.getRowConstraints().add(row1);
+
         for (int i = 0; i < 10; i++) {
-            RowConstraints row = new RowConstraints(30);
+            RowConstraints row = new RowConstraints();
+            row.setPrefHeight(30);
             grid.getRowConstraints().add(row);
+
             Label rowLabel = new Label(String.valueOf((char) ('A' + i)));
+            rowLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #2c3e50; -fx-background-color: #E3F2FD; -fx-background-radius: 4px; -fx-padding: 4px;");
             rowLabel.setMinSize(30, 30);
             rowLabel.setAlignment(Pos.CENTER);
+            GridPane.setHalignment(rowLabel, javafx.geometry.HPos.CENTER);
             grid.add(rowLabel, 0, i + 1);
         }
 
         for (int row = 1; row <= 10; row++) {
             for (int col = 1; col <= 10; col++) {
                 Rectangle cell = new Rectangle(30, 30);
-                cell.setFill(canClick ? Color.web("#E1F5FE") : Color.web("#E8F5E8"));
-                cell.setStroke(strokeColor);
-                cell.setStrokeWidth(1);
 
-                final int r = row, c = col;
+                // Màu sắc đơn giản, rõ ràng
                 if (canClick) {
-                    cell.setOnMouseClicked(e -> {
-                        if (isPlayerTurn) attack(c, r, cell);
-                    });
+                    // Bảng đối phương - màu xanh nhạt
+                    cell.setFill(Color.web("#E1F5FE"));
+                    cell.setStroke(Color.web("#0277BD"));
+                } else {
+                    // Bảng của mình - màu xanh lá nhạt
+                    cell.setFill(Color.web("#E8F5E8"));
+                    cell.setStroke(Color.web("#388E3C"));
                 }
 
+                cell.setStrokeWidth(1);
+                cell.setArcWidth(4);
+                cell.setArcHeight(4);
+
+                final int rowIndex = row;
+                final int colIndex = col;
+
+                if (canClick) {
+                    // Hiệu ứng hover đơn giản
+                    cell.setOnMouseEntered(e -> {
+                        if (isPlayerTurn) {
+                            cell.setFill(Color.web("#B3E5FC"));
+                            cell.setStroke(Color.web("#0277BD"));
+//                                cell.setStrokeWidth(1);
+                        }
+                    });
+
+                    cell.setOnMouseExited(e -> {
+                        if (isPlayerTurn) {
+                            cell.setFill(Color.web("#E1F5FE"));
+                            cell.setStroke(Color.web("#0277BD"));
+//                                cell.setStrokeWidth(1);
+                        }
+                    });
+
+                    cell.setOnMouseClicked(event -> {
+                        if (isPlayerTurn) {
+                            attack(colIndex, rowIndex, cell);
+                        }
+                    });
+                }
                 grid.add(cell, col, row);
             }
         }
@@ -168,6 +277,9 @@ public class PlayWithAIController extends Application {
 
         cell.setFill(success ? Color.web("#81C784") : Color.web("#FF5252"));
         cell.setOnMouseClicked(null);
+        cell.setOnMouseEntered(null);  // ❗ Ngăn hover làm đổi màu
+        cell.setOnMouseExited(null);   // ❗ Trả về đúng màu đã bắn
+
         updateGameResult(success, playerResult);
         if (sunk && playerResult.getHits() != 17) handleShipSunk();
 
@@ -175,6 +287,7 @@ public class PlayWithAIController extends Application {
             endGame(true);
             return;
         }
+        if (turn == 1 && success) playerResult.setFirstHit(true);
 
         if (!success) {
             switchTurn();
@@ -188,12 +301,149 @@ public class PlayWithAIController extends Application {
             }).start();
         }
     }
+    private List<int[]> trackingHits = new ArrayList<>();
+    private Queue<int[]> pendingHits = new LinkedList<>();
+    private int[] currentDirection = null;
+    private List<int[]> directionsToTry = new ArrayList<>();
+
 
     private void aiTurn() {
-        if (availableTargets.isEmpty()) return;
+        if (aiPaused || availableTargets.isEmpty()) return;
 
-        int[] coord = availableTargets.remove(random.nextInt(availableTargets.size()));
-        int col = coord[0], row = coord[1];
+        int col = -1, row = -1;
+
+        if (!trackingHits.isEmpty()) {
+            if (trackingHits.size() == 1) {
+                if (directionsToTry.isEmpty()) {
+                    directionsToTry = new ArrayList<>(List.of(
+                            new int[]{0, -1}, new int[]{0, 1},
+                            new int[]{-1, 0}, new int[]{1, 0}
+                    ));
+                }
+
+                while (!directionsToTry.isEmpty()) {
+                    int[] dir = directionsToTry.remove(0);
+                    int[] origin = trackingHits.get(0);
+                    int nextCol = origin[0] + dir[0];
+                    int nextRow = origin[1] + dir[1];
+                    if (isValid(nextCol, nextRow)) {
+                        col = nextCol;
+                        row = nextRow;
+                        currentDirection = dir;
+                        break;
+                    }
+                }
+
+            } else {
+                if (currentDirection == null && trackingHits.size() >= 2) {
+                    int[] first = trackingHits.get(0);
+                    int[] second = trackingHits.get(1);
+                    currentDirection = new int[]{
+                            second[0] - first[0],
+                            second[1] - first[1]
+                    };
+                }
+
+                if (currentDirection != null) {
+                    int[] last = trackingHits.get(trackingHits.size() - 1);
+                    int nextCol = last[0] + currentDirection[0];
+                    int nextRow = last[1] + currentDirection[1];
+
+                    if (isValid(nextCol, nextRow)) {
+                        col = nextCol;
+                        row = nextRow;
+                    } else {
+                        int[] first = trackingHits.get(0);
+                        int revCol = first[0] - currentDirection[0];
+                        int revRow = first[1] - currentDirection[1];
+
+                        if (isValid(revCol, revRow)) {
+                            Collections.reverse(trackingHits);
+                            currentDirection = new int[]{
+                                    -currentDirection[0],
+                                    -currentDirection[1]
+                            };
+                            col = revCol;
+                            row = revRow;
+                        } else {
+                            // Quay lại thử hướng khác
+                            if (!trackingHits.isEmpty()) {
+                                int[] origin = trackingHits.get(0);
+                                trackingHits.clear();
+                                trackingHits.add(origin);
+
+                                // reset lại nhưng loại bỏ hướng sai
+                                directionsToTry = new ArrayList<>(List.of(
+                                        new int[]{0, -1}, new int[]{0, 1},
+                                        new int[]{-1, 0}, new int[]{1, 0}
+                                ));
+                                directionsToTry.removeIf(dir -> Arrays.equals(dir, currentDirection));
+                                currentDirection = null;
+
+                                new Thread(() -> {
+                                    try {
+                                        Thread.sleep(100);
+                                        aiTurn();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }).start();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (col == -1 || row == -1) {
+            if (!pendingHits.isEmpty()) {
+                int[] nextHit = pendingHits.poll();
+                if (nextHit != null && !visited.contains(nextHit[0] + "," + nextHit[1])) {
+                    trackingHits.clear();
+                    trackingHits.add(nextHit);
+                    currentDirection = null;
+                    directionsToTry.clear();
+
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(100);
+                            aiTurn();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                    return;
+                }
+            }
+
+            List<int[]> filtered = new ArrayList<>();
+            for (int[] coord : availableTargets) {
+                if ((coord[0] + coord[1]) % 2 == 0) {
+                    filtered.add(coord);
+                }
+            }
+
+            int[] coord = (filtered.isEmpty() ? availableTargets : filtered)
+                    .remove(random.nextInt(filtered.isEmpty() ? availableTargets.size() : filtered.size()));
+
+            col = coord[0];
+            row = coord[1];
+        }
+
+        String key = col + "," + row;
+        if (visited.contains(key)) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(100);
+                    aiTurn();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            return;
+        }
+        visited.add(key);
 
         boolean success = false;
         boolean sunk = false;
@@ -202,51 +452,93 @@ public class PlayWithAIController extends Application {
             if (ship.isOccupied(col, row)) {
                 ship.Attacked();
                 success = true;
-                if (ship.getAttackCount() == ship.getSize()) sunk = true;
+                if (ship.getAttackCount() == ship.getSize()) {
+                    sunk = true;
+                    if (countHits(playerShips) != 17) {
+                        Platform.runLater(this::handleShipSunk);
+                    }
+                }
                 break;
             }
         }
 
         updateGameResult(success, AIResult);
-        if (sunk && countHits(playerShips) != 17) handleShipSunk();
 
         final boolean finalSuccess = success;
+        final boolean finalSunk = sunk;
+        final int finalCol = col;
+        final int finalRow = row;
 
         Platform.runLater(() -> {
-            Rectangle rect = getRectangleAt(boardGridPlayer, col, row);
-
+            Rectangle rect = getRectangleAt(boardGridPlayer, finalCol, finalRow);
             if (!finalSuccess) {
                 if (rect != null) rect.setFill(Color.web("#FF5252"));
-            } else {
-                if (rect != null) {
-                    boardGridPlayer.getChildren().remove(rect);
+
+                if (currentDirection != null && !trackingHits.isEmpty()) {
+                    int[] first = trackingHits.get(0);
+                    int revCol = first[0] - currentDirection[0];
+                    int revRow = first[1] - currentDirection[1];
+                    if (isValid(revCol, revRow)) {
+                        Collections.reverse(trackingHits);
+                        currentDirection = new int[]{
+                                -currentDirection[0],
+                                -currentDirection[1]
+                        };
+                    } else {
+                        if (!trackingHits.isEmpty()) {
+                            int[] origin = trackingHits.get(0);
+                            trackingHits.clear();
+                            trackingHits.add(origin);
+
+                            directionsToTry = new ArrayList<>(List.of(
+                                    new int[]{0, -1}, new int[]{0, 1},
+                                    new int[]{-1, 0}, new int[]{1, 0}
+                            ));
+                            directionsToTry.removeIf(dir -> Arrays.equals(dir, currentDirection));
+                            currentDirection = null;
+                        }
+                    }
                 }
+            } else {
+                if (rect != null) boardGridPlayer.getChildren().remove(rect);
 
                 Rectangle newRect = new Rectangle(30, 30);
                 newRect.setFill(Color.web("#FFF176"));
                 newRect.setStroke(Color.web("#388E3C"));
                 newRect.setArcWidth(4);
                 newRect.setArcHeight(4);
+                boardGridPlayer.add(newRect, finalCol, finalRow);
 
-                boardGridPlayer.add(newRect, col, row);
+                if (!finalSunk) {
+                    trackingHits.add(new int[]{finalCol, finalRow});
+                } else {
+                    trackingHits.clear();
+                    currentDirection = null;
+                    directionsToTry.clear();
+                }
             }
 
             if (countHits(playerShips) == 17) {
                 endGame(false);
-            } else if (!finalSuccess) {
-                switchTurn(); // chuyển về người chơi
             } else {
-                // bắn trúng, tiếp tục bắn sau delay
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(1000);
-                        aiTurn(); // gọi lại đệ quy
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                if (finalSuccess) {
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(700);
+                            aiTurn();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                } else {
+                    switchTurn();
+                }
             }
         });
+    }
+
+    private boolean isValid(int col, int row) {
+        return col >= 1 && col <= 10 && row >= 1 && row <= 10 && !visited.contains(col + "," + row);
     }
 
     private Rectangle getRectangleAt(GridPane grid, int col, int row) {
@@ -264,8 +556,63 @@ public class PlayWithAIController extends Application {
     }
 
     private void updateTurnUI() {
-        playerLabel.setText(isPlayerTurn ? "🔰 YOUR FLEET - DEFENDING" : "🔱 UNDER ATTACK!");
-        opponentLabel.setText(isPlayerTurn ? "🎯 YOUR TURN - ATTACK!" : "🏴‍☠️ ENEMY ATTACKING");
+        if (boardGridPlayer == null || boardGridOpponent == null) {
+            System.out.println("boardGridPlayer hoặc boardGridOpponent là null trong updateTurnUI!");
+            return;
+        }
+        if (playerLabel == null || opponentLabel == null) {
+            System.out.println("playerLabel hoặc opponentLabel là null trong updateTurnUI!");
+            return;
+        }
+
+        if (isPlayerTurn) {
+            // Lượt của mình - màu xanh lá
+            playerLabel.setText("🔰 YOUR FLEET - DEFENDING");
+            playerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; " +
+                    "-fx-background-color: #2E7D32; " +
+                    "-fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; " +
+                    "-fx-border-color: #4CAF50; -fx-border-width: 2px; -fx-border-radius: 8px;");
+
+            opponentLabel.setText("🎯 YOUR TURN - ATTACK!");
+            opponentLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; " +
+                    "-fx-background-color: #D32F2F; " +
+                    "-fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; " +
+                    "-fx-border-color: #F44336; -fx-border-width: 2px; -fx-border-radius: 8px; " +
+                    "-fx-effect: dropshadow(gaussian, rgba(211,47,47,0.5), 8, 0.5, 0, 0);");
+
+            // Làm nổi bật bảng đối phương
+            if (playerBoardContainer != null) {
+                playerBoardContainer.setOpacity(0.8);
+            }
+            if (opponentBoardContainer != null) {
+                opponentBoardContainer.setOpacity(1.0);
+                opponentBoardContainer.setStyle("-fx-effect: dropshadow(gaussian, rgba(211,47,47,0.3), 10, 0.4, 0, 0);");
+            }
+
+        } else {
+            // Lượt đối phương - màu cam
+            playerLabel.setText("🔱 UNDER ATTACK!");
+            playerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; " +
+                    "-fx-background-color: #2E7D32; " +
+                    "-fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; " +
+                    "-fx-border-color: #4CAF50; -fx-border-width: 2px; -fx-border-radius: 8px;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(4,227,48,0.5), 8, 0.5, 0, 0);");
+
+            opponentLabel.setText("🏴‍☠️ ENEMY ATTACKING");
+            opponentLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; " +
+                    "-fx-background-color: #BF360C; " +
+                    "-fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; " +
+                    "-fx-border-color: #FF5722; -fx-border-width: 2px; -fx-border-radius: 8px;");
+
+            // Làm nổi bật bảng của mình
+            if (playerBoardContainer != null) {
+                playerBoardContainer.setOpacity(1.0);
+                playerBoardContainer.setStyle("-fx-effect: dropshadow(gaussian, rgba(245,124,0,0.3), 10, 0.4, 0, 0);");
+            }
+            if (opponentBoardContainer != null) {
+                opponentBoardContainer.setOpacity(0.8);
+            }
+        }
     }
 
     private void updateGameResult(boolean success, GameResult gameResult) {
@@ -334,6 +681,8 @@ public class PlayWithAIController extends Application {
     }
 
     private void handleShipSunk() {
+        aiPaused = true; // 🔴 Dừng AI hoàn toàn
+
         Platform.runLater(() -> {
             Stage stage = (Stage) playerName.getScene().getWindow();
 
@@ -352,6 +701,19 @@ public class PlayWithAIController extends Application {
                         Thread.sleep(3000); // Chờ 3 giây
                         Platform.runLater(() -> {
                             stage.setScene(Main.popScene());
+
+                            new Thread(() -> {
+                                try {
+                                    Thread.sleep(400);
+                                    Platform.runLater(() -> {
+                                        aiPaused = false;
+                                        if (!isPlayerTurn)
+                                            aiTurn();
+                                    });
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }).start();
                         });
                     } catch (InterruptedException e) {
                         e.printStackTrace();

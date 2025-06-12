@@ -14,15 +14,16 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns="http://javafx.com/javafx"
+<StackPane  xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml" stylesheets="@css/styleBoard.css" fx:controller="battleships.BoardOfflineController" prefHeight="400.0" prefWidth="600.0">
 
-    <top>
-        <StackPane alignment="CENTER">
-            <padding><Insets top="20" left="20" right="20"/></padding>
+    <BorderPane StackPane.alignment="CENTER">
+        <top>
+            <StackPane alignment="CENTER">
+                <padding><Insets left="20" top="20" right="20"/></padding>
 
-            <Label text="Deploy Fleet"
-                   style="-fx-text-fill: white;
+                <Label text="Deploy Fleet"
+                       style="-fx-text-fill: white;
               -fx-background-color: rgba(0, 0, 0, 0.5);
               -fx-background-insets: 0;
               -fx-padding: 10px 100px;
@@ -31,38 +32,27 @@
               -fx-border-radius: 5px;
               -fx-font-size: 24px;
               -fx-font-weight: bold;"
-                   alignment="CENTER"/>
+                       alignment="CENTER"/>
 
-            <HBox alignment="TOP_RIGHT">
-                <Button styleClass="button-circle"  prefWidth="50" prefHeight="50">
-                    <graphic>
-                        <ImageView fitWidth="30" fitHeight="30">
-                            <image>
-                                <Image url="@images/setting.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
+                <HBox alignment="TOP_RIGHT">
+                    <Button fx:id="btnSettings" styleClass="button-circle" onAction="#handleSetting" prefWidth="100" prefHeight="100"/>
+                </HBox>
+            </StackPane>
+        </top>
 
-            </HBox>
-        </StackPane>
-    </top>
+        <center>
+            <HBox alignment="CENTER" translateY="-10">
+                <!-- GridPane ở bên trái -->
+                <VBox alignment="CENTER">
+                    <GridPane fx:id="boardGrid" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                              GridPane.columnSpan="10" GridPane.rowSpan="10"
+                              style=" -fx-alignment: center; -fx-padding: 20px;"
+                              alignment="CENTER">
+                    </GridPane>
+                </VBox>
 
-
-
-    <center>
-        <HBox alignment="CENTER">
-            <!-- GridPane ở bên trái -->
-            <VBox alignment="CENTER">
-                <GridPane fx:id="boardGrid" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                          GridPane.columnSpan="10" GridPane.rowSpan="10"
-                          style=" -fx-alignment: center; -fx-padding: 20px;"
-                          alignment="CENTER">
-                </GridPane>
-            </VBox>
-
-            <VBox alignment="CENTER">
-                <VBox alignment="CENTER" spacing="10" style="-fx-text-fill: white;
+                <VBox alignment="CENTER">
+                    <VBox alignment="CENTER" spacing="20" style="-fx-text-fill: white;
                                                              -fx-background-color: rgba(0, 0, 0, 0.5);
                                                              -fx-background-insets: 0;
                                                              -fx-border-color: #FFD700, black;
@@ -72,52 +62,58 @@
                                                              -fx-font-weight: bold;
                                                              -fx-min-height: 300px;
                                                              -fx-pref-width: 210px;">
-                    <Label text="Drag to move" style="-fx-text-fill: white;" />
+                        <Label text="Drag to move" style="-fx-text-fill: white;" />
 
-                    <ImageView fitWidth="60" fitHeight="60">
-                        <image>
-                            <Image url="@images/move-button.png" />
-                        </image>
-                    </ImageView>
+                        <ImageView fitWidth="60" fitHeight="60">
+                            <image>
+                                <Image url="@images/move-button.png" />
+                            </image>
+                        </ImageView>
 
-                    <Label text="Click to rotate" style="-fx-text-fill: white;"/>
+                        <Label text="Click to rotate" style="-fx-text-fill: white;"/>
 
-                    <ImageView fitWidth="60" fitHeight="60">
-                        <image>
-                            <Image url="@images/cursor-button.png" />
-                        </image>
-                    </ImageView>
+                        <ImageView fitWidth="60" fitHeight="60">
+                            <image>
+                                <Image url="@images/cursor-button.png" />
+                            </image>
+                        </ImageView>
+                    </VBox>
+
+
+                    <VBox alignment="CENTER" style="-fx-padding: 20px 0 0 0;">
+                        <Button styleClass="button-circle" onAction="#initialize" prefWidth="100" prefHeight="100">
+                            <graphic>
+                                <ImageView fitWidth="60" fitHeight="60">
+                                    <image>
+                                        <Image url="@images/circular.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+
+                    </VBox>
+
+
+
                 </VBox>
 
+            </HBox>
 
-                <VBox alignment="CENTER" style="-fx-padding: 20px 0 0 0;">
-                    <Button styleClass="button-circle" onAction="#initialize" prefWidth="100" prefHeight="100">
-                        <graphic>
-                            <ImageView fitWidth="60" fitHeight="60">
-                                <image>
-                                    <Image url="@images/circular.png" />
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
+        </center>
 
-                </VBox>
-
-
-
-            </VBox>
-
-        </HBox>
-
-    </center>
-
-
-
-
-    <bottom>
-        <HBox alignment="BOTTOM_CENTER" spacing="10">
-            <padding><Insets bottom="25" left="15" right="15"/></padding>
-            <Button fx:id="readyButton" onAction="#Ready" styleClass="button-primary" text="Not Ready" prefWidth="360" prefHeight="50"/>
-        </HBox>
-    </bottom>
-</BorderPane>
+        <bottom>
+            <HBox alignment="BOTTOM_CENTER" spacing="10" style="-fx-padding: 0 15 5 15;">
+                <Button text="Back" onAction="#handleBack" prefWidth="230" prefHeight="140" fx:id="btnBack"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="readyButton"
+                        translateX="-15"
+                        translateY="-25"
+                        onAction="#Ready"
+                        styleClass="button-primary"
+                        text="Not Ready"
+                        prefWidth="330"
+                        prefHeight="100" />
+            </HBox>
+        </bottom>
+    </BorderPane>
+</StackPane>

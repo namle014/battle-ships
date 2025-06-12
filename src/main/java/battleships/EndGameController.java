@@ -545,4 +545,30 @@ public class EndGameController {
 
         animateProgressTransfer(current -  total);
     }
+
+    public void winInfo(boolean isWin, int curHits, int curShots) {
+        int wins = UserSession.getInstance().getTotalWins() + (isWin ? 1 : 0);
+        int total = UserSession.getInstance().getTotalPlays() + 1;
+        int hits = UserSession.getInstance().getTotalHits() + curHits;
+        int shots = UserSession.getInstance().getTotalShots() + curShots;
+
+        String sql = "UPDATE players SET total_wins = ?, total_plays = ?, total_hits = ?, total_shots = ?" +
+                " WHERE id = CAST(? AS UUID)";
+
+        try (Connection conn = database.DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, wins);
+            stmt.setInt(2, total);
+            stmt.setInt(3, hits);
+            stmt.setInt(4, shots);
+            stmt.setObject(5, UUID.fromString(UserSession.getInstance().getUserId()));
+
+            stmt.executeUpdate();
+
+            System.out.println("Successfully end game");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

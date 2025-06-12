@@ -77,6 +77,7 @@
         private GameResult opponentGameResult;
         private int streak;
         private int turn;
+        private boolean isFirstShot = true;
 
         @Override
         public void start(Stage primaryStage) throws Exception {
@@ -291,7 +292,8 @@
             if (win) {
                 endGame(win);
             }
-            if (turn == 1 && success) gameResult.setFirstHit(true);
+            if (turn == 1 && success && isFirstShot) gameResult.setFirstHit(true);
+            isFirstShot = false;
             network.requestAttack(col, row, success, win, gameResult, shipsunk);
             if (!success) switchTurn();
         }
@@ -354,7 +356,7 @@
                 opponentLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; " +
                         "-fx-background-color: #D32F2F; " +
                         "-fx-padding: 12px; -fx-alignment: center; -fx-background-radius: 8px; " +
-                        "-fx-border-color: #F44336; -fx-border-width: 3px; -fx-border-radius: 8px; " +
+                        "-fx-border-color: #F44336; -fx-border-width: 2px; -fx-border-radius: 8px; " +
                         "-fx-effect: dropshadow(gaussian, rgba(211,47,47,0.5), 8, 0.5, 0, 0);");
 
                 // Làm nổi bật bảng đối phương

@@ -1,5 +1,7 @@
 package battleships;
 
+import common.UserSession;
+import database.DatabaseHelper;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,9 +24,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 
+import static battleships.Main.popScene;
+import static battleships.Main.pushScene;
+
 public class BoardOfflineController extends Application {
     @FXML private GridPane boardGrid;
-    @FXML private Button readyButton;
+    @FXML private Button readyButton, btnSettings;
 
     private List<Ship> ships = new ArrayList<>();
     private Random random = new Random();
@@ -49,6 +54,11 @@ public class BoardOfflineController extends Application {
         boardGrid.getChildren().clear();
         boardGrid.getColumnConstraints().clear();
         boardGrid.getRowConstraints().clear();
+
+        ImageView settingsIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/setting.png")));
+        settingsIcon.setFitWidth(57); // Kích thước icon
+        settingsIcon.setFitHeight(57);
+        btnSettings.setGraphic(settingsIcon);
 
         ColumnConstraints labelCol = new ColumnConstraints(45);
         boardGrid.getColumnConstraints().add(labelCol);
@@ -129,6 +139,30 @@ public class BoardOfflineController extends Application {
             if (ship != ignore && ship.isOccupied(x, y)) return true;
         }
         return false;
+    }
+
+    @FXML
+    private void handleBack()  throws IOException{
+        UserSession session = UserSession.getInstance();
+        DatabaseHelper.updateSession(session.getUsername());
+        LoginController.getPlayerDailyQuests(session.getUserId());
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+        Parent modeView = loader.load();
+
+        // Gọi lại update khi cửa sổ mở lại
+        MainController controller = loader.getController();
+        controller.updateInfoPersonal();
+        controller.updateDailyQuests();
+
+        Stage stage = (Stage) readyButton.getScene().getWindow();
+
+        Scene currentScene = stage.getScene();
+        pushScene(currentScene);
+
+        stage.setScene(new Scene(modeView));
+
+        stage.show();
     }
 
     private void addShipToGrid(Ship ship) {
@@ -268,10 +302,26 @@ public class BoardOfflineController extends Application {
             controller.setPlayerShips(ships);
 
             Stage stage = (Stage) readyButton.getScene().getWindow();
+            Scene currentScene = stage.getScene();
+            pushScene(currentScene);
             stage.setScene(new Scene(playView));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    private void handleSetting()  throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/SettingView.fxml"));
+        Parent modeView = loader.load();
+
+        Stage stage = (Stage) readyButton.getScene().getWindow();
+
+        Scene currentScene = stage.getScene();
+        pushScene(currentScene);
+
+        stage.setScene(new Scene(modeView));
+
+        stage.show();
     }
 }

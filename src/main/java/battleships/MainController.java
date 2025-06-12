@@ -76,23 +76,6 @@ public class MainController {
     }
 
     @FXML
-    private void handlePlayOnline() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/EndGameView.fxml"));
-        Parent modeView = loader.load();
-        ModuleLayer.Controller controller = (ModuleLayer.Controller) loader.getController();
-
-        Stage stage = (Stage) btnPlaySingle.getScene().getWindow();
-
-        Scene currentScene = stage.getScene();
-        pushScene(currentScene);
-
-        stage.setScene(new Scene(modeView));
-
-        stage.show();
-    }
-
-    @FXML
     private void handleStartGame()  throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/PWFModeView.fxml"));
         Parent modeView = loader.load();
@@ -135,8 +118,15 @@ public class MainController {
     public void updateInfoPersonal() {
         UserSession session = UserSession.getInstance();
         int wins = session.getTotalWins(), totalPlays = session.getTotalPlays();
-        double accuracy = session.getTotalShots() != 0 ? (double) session.getTotalHits() / session.getTotalShots() : 0;
-        String accuracyStr = String.format("%.1f", accuracy);
+        double accuracy = session.getTotalShots() != 0
+                ? (double) session.getTotalHits() / session.getTotalShots()
+                : 0;
+
+//        System.out.println(wins + " wins " + totalPlays + " plays " + accuracy + " shots " + session.getTotalShots());
+
+        int accuracyPercent = (int) Math.round(accuracy * 100);
+        String accuracyStr = accuracyPercent + "%";
+
         int level = session.getLevel();
         int currentProgress = session.getCurrentProgressLevel();
 
